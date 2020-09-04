@@ -1,0 +1,60 @@
+﻿@model ITHelpDesk.Models.Address
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var title = "Create Address";
+}
+
+<form method="post">
+    <div class="row p-3 border">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @if (Model.AddressId != 0)
+        {
+            title = "Edit Address";
+        }
+        <div class="col-12 border-bottom">
+            <h2 class="text-primary">@title
+            </h2>
+        </div>
+        <div class="col-8 pt-4">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Building"></label>
+                </div>
+                <div class="col-4">
+                    <label asp-for="Block"></label>
+                </div>
+                <div class="col-4">
+                    <label asp-for="Flag"></label>
+                </div>
+                <div class="col-4">
+                    <input asp-for="Building" class="form-control"/>
+                    <span asp-validation-for="Building" class="text-danger"></span>
+                </div>
+                <div class="col-4">
+                    <input asp-for="Block" class="form-control" />
+                    <span asp-validation-for="Block" class="text-danger"></span>
+                </div>
+                <div class="col-4">
+                    <input asp-for="Flag" class="form-control" />
+                    <span asp-validation-for="Flag" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-8 offset-4">
+                    @if (Model.AddressId != 0)
+                    {
+                       <partial name="_EditAndBackToListButton" model="Model.AddressId" />
+                    }
+                    else
+                    {
+                      <partial name="_CreateAndBackToListButton" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{ 
+<partial name ="_ValidationScriptsPartial" />
+}

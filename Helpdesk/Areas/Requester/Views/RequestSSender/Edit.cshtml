@@ -1,0 +1,119 @@
+﻿@model ITHelpDesk.Models.Request
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Request: </h4>
+<hr />
+
+
+<form asp-action="Edit">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Description
+                </th>
+
+                <th>
+                    Address
+                </th>
+                <th>
+                    Room
+                </th>
+                <th>
+                    Done
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RequestId" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RequestmakerId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ManagerId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="WorkerId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RWeight" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RStatus" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RDateTime" />
+            <tr>
+
+                <td>
+                    <div class="form-group">
+                        <input asp-for="RName" class="form-control" />
+                        <span asp-validation-for="RName" class="text-danger"></span>
+
+                    </div>
+
+                </td>
+                <td>
+                    <input asp-for="RDescription" class="form-control" />
+                    <span asp-validation-for="RDescription" class="text-danger"></span>
+                </td>
+
+
+
+                <td>
+                    <div class="form-group">
+                        <select asp-for="AddressId" class="form-control" asp-items="ViewBag.AddressId"></select>
+                        <span asp-validation-for="AddressId" class="text-danger"></span>
+                    </div>
+
+                </td>
+                <td>
+                    <input asp-for="Room" class="form-control" />
+                    <span asp-validation-for="Room" class="text-danger"></span>
+                </td>
+
+                <td>
+                    @if (Model.RStatus.ToLower() == "blue")
+                    {
+
+                    }
+                    else
+                    {
+                        @if (Model.RStatus == "green")
+                        {
+                            @Html.CheckBox("Done", true)
+
+                        }
+                        else
+                        {
+                            @Html.CheckBox("Done", false)
+                        }
+                    }
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </td>
+
+
+
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20200804181126_AddUsersAddressChange4toDb.cs" />
+    <Compile Remove="Migrations\20200804181126_AddUsersAddressChange4toDb.Designer.cs" />
+    <Compile Remove="Migrations\20200804181617_AddUsersAddressChange4toDb.cs" />
+    <Compile Remove="Migrations\20200804181617_AddUsersAddressChange4toDb.Designer.cs" />
+    <Compile Remove="Migrations\20200804181707_AddUsersAddressChange4toDb.cs" />
+    <Compile Remove="Migrations\20200804181707_AddUsersAddressChange4toDb.Designer.cs" />
+    <Compile Remove="Migrations\20200804181803_AddUsersAddressChange4toDb.cs" />
+    <Compile Remove="Migrations\20200804181803_AddUsersAddressChange4toDb.Designer.cs" />
+    <Compile Remove="Migrations\20200805054639_AddUsersAddressChange5toDb.cs" />
+    <Compile Remove="Migrations\20200805054639_AddUsersAddressChange5toDb.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.35" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="3.1.5" />
+    <PackageReference Include="System.Text.Json" Version="4.7.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ITHelpDesk.Models\ITHelpDesk.Models.csproj" />
+    <ProjectReference Include="..\ITHelpDesk.Utility\ITHelpDesk.Utility.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,71 @@
+﻿@model ITHelpDesk.Models.Request
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    
+    
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Title
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.RName)
+        </dd>
+        <dt class = "col-sm-2">
+            Description
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.RDescription)
+        </dd>
+        <dt class = "col-sm-2">
+            Status
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.RStatus)
+        </dd>
+        <dt class = "col-sm-2">
+           Weight
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.RWeight)
+        </dd>
+        <dt class = "col-sm-2">
+            Date&Time
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.RDateTime)
+        </dd>
+        <dt class = "col-sm-2">
+           Address
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Address.Full)
+        </dd>
+        <dt class = "col-sm-2">
+            Manager
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Manager.User.Fullname)
+        </dd>
+        <dt class = "col-sm-2">
+            Requester
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Requestmaker.User.Fullname)
+        </dd>
+        <dt class = "col-sm-2">
+            Employee
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Worker.User.Fullname)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

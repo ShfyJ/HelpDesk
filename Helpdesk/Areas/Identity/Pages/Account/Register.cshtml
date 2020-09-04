@@ -1,0 +1,106 @@
+﻿@page
+@using ITHelpDesk.Utility
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+    ViewData["role"] = "Employee";
+}
+
+
+<div class="py-4">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row form-group">
+        <div class="col-8 offset-2">
+            <div class="card">
+                <div class="card-body px-lg-5 pt-4">
+                    <form autocomplete="off" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <h3 class="col-12 text-success text-center py-4">
+                            @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                            {
+                                <strong>Register an User Account</strong>
+                            }
+                            else
+                            {
+                                <strong>Sign Up</strong>
+                            }
+                        </h3>
+                        <hr />
+
+                        <div class="py-2">
+
+                            <input asp-for="Input.FName" placeholder="First Name" class="form-control" />
+                            <span asp-validation-for="Input.FName" class="text-danger"></span>
+                        </div>
+                        <div class="py-2">
+                            <input asp-for="Input.LName" placeholder="Last Name" class="form-control" />
+                            <span asp-validation-for="Input.LName" class="text-danger"></span>
+                        </div>
+                        <div class="py-2">
+                            <input asp-for="Input.Email" placeholder="Email" class="form-control" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="py-2 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> +998</span>
+                            </div>
+                            <input asp-for="Input.PhoneNumber" type="text" placeholder="Phone Number" class="form-control" />
+                            <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-row py-2">
+                            <div class="col">
+                                <label asp-for="Input.AddressId">Building</label>
+                                @Html.DropDownListFor(m => m.Input.AddressId, Model.Input.BuildingList ?? new List<SelectListItem>(), "Please select a building", new { @class = "form-control" })
+                            </div>
+                            <div class="col">
+                                <label asp-for="Input.AddressId">Block</label>
+                                @Html.DropDownListFor(m => m.Input.AddressId, Model.Input.BlockList ?? new List<SelectListItem>(), "Please select a block", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        @if (User.IsInRole(SD.Role_Admin))
+                        {
+                            <div class="form-row py-2">
+                                <div class="col">
+                                    <label asp-for="Input.Role"></label>
+                                    @Html.DropDownListFor(m => m.Input.Role, Model.Input.RoleList ?? new List<SelectListItem>(), "Please select a role", new { @class = "form-control", id = "ddl" })
+                                </div>
+                            
+                                
+                                    <div class="col">
+                                        <label asp-for="Input.ManagerId">Managers</label>
+                                        @Html.DropDownListFor(m => m.Input.ManagerId, Model.Input.ManagerList ?? new List<SelectListItem>(), "Please select a manager", new { @class = "form-control" })
+                                    </div>
+                                
+                            </div>
+
+
+                        }
+                        <div class="form-row py-2">
+                            <div class="col">
+                                <input asp-for="Input.Password" placeholder="Password" class="form-control" />
+                                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            </div>
+                            <div class="col">
+                                <input asp-for="Input.ConfirmPassword" placeholder="Confirm Password" class="form-control" />
+                                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="py-2">
+                            <button type="submit" class="btn btn-success form-control">Register</button>
+                        </div>
+                        <p>
+                            By clicking <em>Register</em> you agree to our <a href="" target="_blank"> terms of service </a>
+                        </p>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+   
+}
+
+

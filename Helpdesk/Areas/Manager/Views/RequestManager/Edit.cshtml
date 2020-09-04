@@ -1,0 +1,117 @@
+﻿@model ITHelpDesk.Models.Request
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Request</h4>
+<form asp-action="Edit">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Room
+                </th>
+                <th>
+                    Date time
+                </th>
+                <th>
+                    Address
+                </th>
+                <th>
+                    Worker
+                </th>
+                <th>
+                    Weight
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RequestId" />
+            <input type="hidden" asp-for="RequestmakerId" />
+
+
+            <tr>
+
+                <td>
+                    <div class="form-group">
+                        <input type="hidden" asp-for="RName" class="form-control" />
+                        <span asp-validation-for="RName" class="text-danger"></span>
+                        @Html.DisplayFor(modelItem => modelItem.RDescription)
+
+                    </div>
+
+                </td>
+                <td>
+                    <input type="hidden" asp-for="RDescription" class="form-control" />
+                    <span asp-validation-for="RDescription" class="text-danger"></span>
+                    @Html.DisplayFor(modelItem => modelItem.RDescription)
+                </td>
+                <td>
+                    <input type="hidden" asp-for="Room" class="form-control" />
+                    <span asp-validation-for="Room" class="text-danger"></span>
+                    @Html.DisplayFor(modelItem => modelItem.Room)
+                </td>
+
+
+                <td>
+                    <input type="hidden" asp-for="RDateTime" class="form-control" />
+                    <span asp-validation-for="RDateTime" class="text-danger"></span>
+                    @Html.DisplayFor(modelItem => modelItem.RDateTime)
+                </td>
+                <td>
+                    <div class="form-group">
+                        <select asp-for="AddressId" class="form-control" asp-items="ViewBag.AddressId"></select>
+                        <span asp-validation-for="AddressId" class="text-danger"></span>
+                    </div>
+                    <!-- @Html.DisplayFor(modelItem => modelItem.Address.Full) -->
+                </td>
+
+                <td>
+                    <div class="form-group">
+                        <select asp-for="WorkerId" class="form-control" asp-items="ViewBag.WorkerId"></select>
+                        <span asp-validation-for="WorkerId" class="text-danger"></span>
+                    </div>
+
+                </td>
+                <td>
+                    <div class="form-group">
+                        <select asp-for="RWeight" class="form-control">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+
+                        <span asp-validation-for="RWeight" class="text-danger"></span>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </td>
+
+
+
+            </tr>
+        </tbody>
+    </table>
+</form>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
