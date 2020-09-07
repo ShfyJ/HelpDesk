@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <link href="~/notifications/ikr.notification.css" rel="stylesheet" />
 </head>
 <body>
     <header>
@@ -45,7 +46,12 @@
                                 <a class="nav-link" asp-area="Employee" asp-controller="Workers" asp-action="Index">My KPI</a>
                             </li>
                         }
+
                     </ul>
+                    @if (User.IsInRole(SD.Role_Manager))
+                    {
+                        <div id="noti_Container"></div>
+                    }
                 </div>
             </div>
         </nav>
@@ -66,10 +72,56 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    
+
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://kit.fontawesome.com/c36730de28.js" crossorigin="anonymous"></script>
+
+    <script src="~/notifications/ikr.notificationPlugin.js"></script>
+
+    <script src="~/push/push.js"></script>
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#noti_Container").ikrNotificationSetup();
+        function autoref() {
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "/Manager/RequestManager/GetNotifications",
+                traditional: true,
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    console.log(data);
+
+                    var notifications = data;
+
+
+                  //  var prevId = notifications[1].requestId;
+                   // console.log(prevId);
+                    $("#noti_Container").ikrNotificationCount({
+                        NotificationList: notifications,
+                        ListTitlePropName: "rName",
+                        // ListBodyPropName: "room",
+                        ActionName: "AllNotifications"
+                    });
+
+                },
+                error: function (xhr, status, error) {
+
+                }
+            });
+
+            setTimeout(autoref, 1000);
+
+        }
+        setTimeout(autoref, 1000);
+
+    });
+</script>
+

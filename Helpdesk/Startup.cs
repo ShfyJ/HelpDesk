@@ -44,6 +44,10 @@ namespace HelpDesk
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddSingleton<IEmailSender, EmailSender>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            Global.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddScoped<ITHelpDesk.DataAccess.Repository.IRequest, IRequestService>();
+
             services.AddControllersWithViews();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
