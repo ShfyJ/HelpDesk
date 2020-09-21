@@ -21,6 +21,7 @@ namespace HelpDesk.DataAccess.Data
         public DbSet<Request> Request { get; set; }
         public DbSet<RequestMakers> RequestMakers { get; set; }
         public DbSet<Workers> Workers { get; set; }
+        public DbSet<Rejected> Rejecteds { get; set; }
         
 
 

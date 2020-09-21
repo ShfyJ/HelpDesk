@@ -14,8 +14,14 @@ namespace ITHelpDesk.Models
         public string RDescription { get; set; }
         public string RStatus { get; set; }
         public byte? RWeight { get; set; }
-        public DateTime? RDateTime { get; set; }
+        public DateTime RDateTime { get; set; }
+        [NotMapped]
+        public string date => RDateTime.ToString("dd-MMM-yyy HH:mm");
+        public DateTime Completed_at { get; set; }
+        [NotMapped]
+        public string completed => Completed_at.ToString("dd-MMM-yyy HH:mm");
         public string Room { get; set; }
+     
         public int? RequestmakerId { get; set; }
         public int? AddressId { get; set; }
         public int? ManagerId { get; set; }
