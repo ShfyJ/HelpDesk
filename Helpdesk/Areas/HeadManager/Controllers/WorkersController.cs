@@ -9,6 +9,7 @@ using ITHelpDesk.Models;
 using HelpDesk.DataAccess.Data;
 using Microsoft.AspNetCore.Authorization;
 using ITHelpDesk.Utility;
+using System.Dynamic;
 
 namespace ITHelpDesk.Areas.HeadManager.Controllers
 {
@@ -48,6 +49,15 @@ namespace ITHelpDesk.Areas.HeadManager.Controllers
             }
 
             return View(workers);
+        }
+
+        //Employee Contacts Action
+        public IActionResult Contacts()
+        {
+            dynamic model = new ExpandoObject();
+            model.Workers = _context.Workers.Include(r => r.Manager).Include(r => r.Request).Include(r => r.User).ThenInclude(u => u.Address).ToList();
+            model.Requests = _context.Request.ToList();
+            return View(model);
         }
 
         // GET: HeadManager/Workers/Create

@@ -6,14 +6,14 @@ $(document).ready(function () {
 
 
 function loadDataTable() {
-    dataTable = $('#tblData').DataTable({
+    dataTable = $('#data-table-basic').DataTable({
         "ajax": {
             "url": "/Admin/Address/GetAll"
         },
         "columns": [
             { "data": "building", "width": "15%" },
             { "data": "block", "width": "15%" },
-            { "data": "flag", "width": "15%" },
+            
             
             
             {
@@ -21,10 +21,10 @@ function loadDataTable() {
                 "render": function (data) {
                     return `
                             <div class="text-center">
-                                <a href="/Admin/Address/Upsert/${data}" class="btn btn-success text-white" style="cursor:pointer">
+                                <a href="/Admin/Address/Upsert/${data}" class="btn btn-success notika-btn-success waves-effect text-white" style="cursor:pointer">
                                     <i class="fas fa-edit"></i> 
                                 </a>
-                                <a onclick=Delete("/Admin/Address/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
+                                <a onclick=Delete("/Admin/Address/Delete/${data}") class="btn btn-danger notika-btn-success waves-effect text-white" style="cursor:pointer">
                                     <i class="fas fa-trash-alt"></i> 
                                 </a>
                             </div>

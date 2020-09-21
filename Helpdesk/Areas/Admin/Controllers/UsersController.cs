@@ -52,10 +52,7 @@ namespace ITHelpDesk.Areas.Admin.Controllers
 
             Console.WriteLine("Address is fetched");
             userList.ForEach(item => Console.Write(item + ","));
-            foreach (var user in userList)
-            {
-                Console.WriteLine(user.Address.Building);
-            }
+            
             var userRole = _db.UserRoles.ToList();
             var roles = _db.Roles.ToList();
             foreach (var user in userList)
@@ -70,7 +67,7 @@ namespace ITHelpDesk.Areas.Admin.Controllers
                         Block ="",
                         Flag =""
                     };
-                }
+                }        
             }
             var jsonlist = Json(new { data = userList }).Value;
             Console.WriteLine(jsonlist);
@@ -98,19 +95,40 @@ namespace ITHelpDesk.Areas.Admin.Controllers
             return Json(new { success = true, message = "Operation is Successfull" });
         }
 
-        [HttpDelete]
-        public IActionResult Delete(int id)
-        {
-            var objFromDb = _unitOfWork.User.Get(id);
-            if (objFromDb == null)
-            {
-                return Json(new { success = false, message = "Error while deleting" });
-            }
-            _unitOfWork.User.Remove(objFromDb);
-            _unitOfWork.Save();
-            return Json(new { success = true, message = "Delete Successful" });
+        //[HttpDelete]
+        //public IActionResult Delete(string id)
+        //{
+        //    var objFromDb = _unitOfWork.User.GetId(id);
+           
+        //    var userRole = _db.UserRoles.ToList();
+        //    var roles = _db.Roles.ToList();
+        //    var roleId = userRole.FirstOrDefault(u => u.UserId == objFromDb.Id).RoleId;
+        //    objFromDb.Role = roles.FirstOrDefault(u => u.Id == roleId).Name;
+        //    var requestMakers = _db.RequestMakers.ToList();
+        //    var requestMakerId = requestMakers.FirstOrDefault(u => u.UserId == objFromDb.Id).RequestmakerId;
+        //    if (objFromDb == null)
+        //    {
+        //        return Json(new { success = false, message = "Error while deleting" });
+        //    }
+        //    if (objFromDb.Role == SD.Role_Requester)
+        //    {
+        //        var requests = _db.Request.ToList();
+        //        var requestList = requests.Include(u => u.RequestmakerId == requestMakerId).
 
-        }
+        //        var requestObjFromDb_ = _unitOfWork.Requester.Get(requestId);
+        //        _unitOfWork.Requester.Remove(requestObjFromDb_);
+
+        //        var objFromDb_ = _unitOfWork.Requester.Get(requestMakerId);
+        //        _unitOfWork.Requester.Remove(objFromDb_);
+        //    }
+
+
+        //    _unitOfWork.User.Remove(objFromDb);          
+            
+        //    _unitOfWork.Save();
+        //    return Json(new { success = true, message = "Delete Successful" });
+
+        //}
         #endregion
     }
 }

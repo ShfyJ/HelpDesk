@@ -2,12 +2,299 @@
 @using ITHelpDesk.Utility
 @model RegisterModel
 @{
+    Layout = null;
     ViewData["Title"] = "Register";
     ViewData["role"] = "Employee";
 }
 
+<!doctype html>
+<html class="no-js" lang="">
 
-<div class="py-4">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Register | Uzneftegaz Helpdesk</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- favicon
+        ============================================ -->
+    <link rel="shortcut icon" type="image/x-icon" href="">
+    <!-- Google Fonts
+        ============================================ -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
+    <!-- Bootstrap CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/bootstrap.min.css">
+    <!-- font awesome CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/font-awesome.min.css">
+    <!-- owl.carousel CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/owl.carousel.css">
+    <link rel="stylesheet" href="~/register/css/owl.theme.css">
+    <link rel="stylesheet" href="~/register/css/owl.transitions.css">
+    <!-- animate CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/animate.css">
+    <!-- normalize CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/normalize.css">
+    <!-- mCustomScrollbar CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/scrollbar/jquery.mCustomScrollbar.min.css">
+    <!-- wave CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/wave/waves.min.css">
+    <!-- Notika icon CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/notika-custom-icon.css">
+    <!-- main CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/main.css">
+    <!-- style CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/style.css">
+    <!-- responsive CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/responsive.css">
+    <!-- modernizr JS
+        ============================================ -->
+    <script src="~/register/js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+<body>
+    <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <!-- Login Register area Start-->
+
+    <div class="login-content" id="logreg-forms">
+        <!-- Register -->
+        
+        <div class="nk-block toggled" id="l-register">
+            <form autocomplete="off" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                @*<h3 class="col-12 text-success text-center py-4">
+                    @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                    {
+                        <strong>Register an User Account</strong>
+                    }
+                    else
+                    {
+                        <strong>Sign Up</strong>
+                    }
+                </h3>
+                <hr />*@
+                <div class="nk-form">
+                    <div class="input-group">
+                        <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-support"></i></span>
+                        <div class="nk-int-st">
+                            <input asp-for="Input.FName" placeholder="First Name" class="form-control" />
+                            <span asp-validation-for="Input.FName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-support"></i></span>
+                        <div class="nk-int-st">
+                            <input asp-for="Input.LName" placeholder="Last Name" class="form-control" />
+                            <span asp-validation-for="Input.LName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="input-group mg-t-15">
+                        <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-mail"></i></span>
+                        <div class="nk-int-st">
+                            <input asp-for="Input.Email" placeholder="Email" class="form-control" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="input-group mg-t-15">
+                        <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-phone "></i></span>
+
+                        <span class="input-group-addon nk-ic-st-pro"> +998</span>
+
+                        <div class="nk-int-st">
+                            <input asp-for="Input.PhoneNumber" placeholder="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="input-group mg-t-15">
+                        <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-house "></i></span>
+                        <div class="nk-int-st">
+                            <div class="row form-group">
+
+                                <div class="form-row py-2">
+                                    <div class="dropdown-trig-sgn open">
+                                        <div class="col">
+                                            @Html.DropDownListFor(m => m.Input.AddressId, Model.Input.BuildingList ?? new List<SelectListItem>(), 
+                                           "Please select a building", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-trig-sgn open">
+                                        <div class="col">
+                                            @Html.DropDownListFor(m => m.Input.AddressId, Model.Input.BlockList ?? new List<SelectListItem>(), 
+                                           "Please select a block", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (User.IsInRole(SD.Role_Admin))
+                    {
+                        <div class="input-group mg-t-15">
+                            <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-checked"></i></span>
+                            <div class="nk-int-st">
+                                <div class="row form-group">
+
+                                    <div class="form-row py-2">
+                                        <div class="dropdown-trig-sgn open">
+                                            <div class="col">
+                                                @Html.DropDownListFor(m => m.Input.Role, Model.Input.RoleList ?? new List<SelectListItem>(), 
+                                               "Please select a role", new { @class = "form-control", id = "ddl" })
+                                            </div>
+                                        </div>
+                                        <div class="dropdown-trig-sgn open">
+                                            <div class="col">
+                                                @Html.DropDownListFor(m => m.Input.ManagerId, Model.Input.ManagerList ?? new List<SelectListItem>(), 
+                                               "Please select a manager", new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    }
+
+
+                    <div class="input-group mg-t-15">
+                        <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-edit"></i></span>
+                        <div class="nk-int-st">
+                            <input asp-for="Input.Password" placeholder="Password" class="form-control" />
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="input-group mg-t-15">
+                        <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-edit"></i></span>
+                        <div class="nk-int-st">
+                            <input asp-for="Input.ConfirmPassword" placeholder="Confirm Password" class="form-control" />
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <button type="submit" data-ma-block="#l-login" class="btn btn-login btn-success btn-float" data-toggle="tooltip" 
+                            data-placement="right" title="" data-original-title="Register"><i class="notika-icon notika-right-arrow"></i></button>
+                    <br />
+                    <p>
+                        By<em>Registering</em> you agree to our <a href="" target="_blank"> terms of service </a>
+                    </p>
+
+                </div>
+
+                <div class="nk-navigation rg-ic-stl">
+                    <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" data-ma-block="#l-login"><i class="notika-icon notika-right-arrow"></i> <span>Sign in</span></a>
+                    <a href="" data-ma-action="nk-login-switch" data-ma-block="#l-forget-password"><i>?</i> <span>Forgot Password</span></a>
+                    
+                </div>
+
+
+                <!-- Forgot Password -->
+                <div class="nk-block" id="l-forget-password">
+                    <div class="nk-form">
+                        <p class="text-left">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eu risus. Curabitur commodo lorem fringilla enim feugiat commodo sed ac lacus.</p>
+
+                        <div class="input-group">
+                            <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-mail"></i></span>
+                            <div class="nk-int-st">
+                                <input type="text" class="form-control" placeholder="Email Address">
+                            </div>
+                        </div>
+
+                        <a href="#l-login" data-ma-action="nk-login-switch" data-ma-block="#l-login" class="btn btn-login btn-success btn-float"><i class="notika-icon notika-right-arrow"></i></a>
+                    </div>
+
+                    <div class="nk-navigation nk-lg-ic rg-ic-stl">
+                        <a href="" data-ma-action="nk-login-switch" data-ma-block="#l-login"><i class="notika-icon notika-right-arrow"></i> <span>Sign in</span></a>
+                        <a href="" data-ma-action="nk-login-switch" data-ma-block="#l-register"><i class="notika-icon notika-plus-symbol"></i> <span>Register</span></a>
+                    </div>
+                </div>
+                </form>
+        </div>
+    </div>
+   
+    <!-- Login Register area End-->
+    <!-- jquery
+        ============================================ -->
+    <script src="~/register/js/vendor/jquery-1.12.4.min.js"></script>
+    <!-- bootstrap JS
+        ============================================ -->
+    <script src="~/register/js/bootstrap.min.js"></script>
+    <!-- wow JS
+        ============================================ -->
+    <script src="~/register/js/wow.min.js"></script>
+    <!-- price-slider JS
+        ============================================ -->
+    <script src="~/register/js/jquery-price-slider.js"></script>
+    <!-- owl.carousel JS
+        ============================================ -->
+    <script src="~/register/js/owl.carousel.min.js"></script>
+    <!-- scrollUp JS
+        ============================================ -->
+    <script src="~/register/js/jquery.scrollUp.min.js"></script>
+    <!-- meanmenu JS
+        ============================================ -->
+    <script src="~/register/js/meanmenu/jquery.meanmenu.js"></script>
+    <!-- counterup JS
+        ============================================ -->
+    <script src="~/register/js/counterup/jquery.counterup.min.js"></script>
+    <script src="~/register/js/counterup/waypoints.min.js"></script>
+    <script src="~/register/js/counterup/counterup-active.js"></script>
+    <!-- mCustomScrollbar JS
+        ============================================ -->
+    <script src="~/register/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!-- sparkline JS
+        ============================================ -->
+    <script src="~/register/js/sparkline/jquery.sparkline.min.js"></script>
+    <script src="~/register/js/sparkline/sparkline-active.js"></script>
+    <!-- flot JS
+        ============================================ -->
+    <script src="~/register/js/flot/jquery.flot.js"></script>
+    <script src="~/register/js/flot/jquery.flot.resize.js"></script>
+    <script src="~/register/js/flot/flot-active.js"></script>
+    <!-- knob JS
+        ============================================ -->
+    <script src="~/register/js/knob/jquery.knob.js"></script>
+    <script src="~/register/js/knob/jquery.appear.js"></script>
+    <script src="~/register/js/knob/knob-active.js"></script>
+    <!--  Chat JS
+        ============================================ -->
+    <script src="~/register/js/chat/jquery.chat.js"></script>
+    <!--  wave JS
+        ============================================ -->
+    <script src="~/register/js/wave/waves.min.js"></script>
+    <script src="~/register/js/wave/wave-active.js"></script>
+    <!-- icheck JS
+        ============================================ -->
+    <script src="~/register/js/icheck/icheck.min.js"></script>
+    <script src="~/register/js/icheck/icheck-active.js"></script>
+    <!--  todo JS
+        ============================================ -->
+    <script src="~/register/js/todo/jquery.todo.js"></script>
+    <!-- Login JS
+        ============================================ -->
+    <script src="~/register/js/login/login-action.js"></script>
+    <!-- plugins JS
+        ============================================ -->
+    <script src="~/register/js/plugins.js"></script>
+    <!-- main JS
+        ============================================ -->
+    <script src="~/register/js/main.js"></script>
+</body>
+@*<div class="py-4">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="row form-group">
         <div class="col-8 offset-2">
@@ -64,13 +351,13 @@
                                     <label asp-for="Input.Role"></label>
                                     @Html.DropDownListFor(m => m.Input.Role, Model.Input.RoleList ?? new List<SelectListItem>(), "Please select a role", new { @class = "form-control", id = "ddl" })
                                 </div>
-                            
-                                
-                                    <div class="col">
-                                        <label asp-for="Input.ManagerId">Managers</label>
-                                        @Html.DropDownListFor(m => m.Input.ManagerId, Model.Input.ManagerList ?? new List<SelectListItem>(), "Please select a manager", new { @class = "form-control" })
-                                    </div>
-                                
+
+
+                                <div class="col">
+                                    <label asp-for="Input.ManagerId">Managers</label>
+                                    @Html.DropDownListFor(m => m.Input.ManagerId, Model.Input.ManagerList ?? new List<SelectListItem>(), "Please select a manager", new { @class = "form-control" })
+                                </div>
+
                             </div>
 
 
@@ -97,10 +384,10 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-   
+
 }
 
-
+</html>

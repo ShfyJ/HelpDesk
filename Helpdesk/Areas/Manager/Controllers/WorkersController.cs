@@ -10,6 +10,7 @@ using HelpDesk.DataAccess.Data;
 using Microsoft.AspNetCore.Authorization;
 using ITHelpDesk.Utility;
 using Microsoft.AspNetCore.Identity;
+using System.Dynamic;
 
 namespace ITHelpDesk.Areas.Admin.Controllers
 {
@@ -36,6 +37,15 @@ namespace ITHelpDesk.Areas.Admin.Controllers
             return View(await uNG_HELPDESKContext.ToListAsync());
         
     }
+
+        //Employee Contacts Action
+        public IActionResult Contacts()
+        {
+            dynamic model = new ExpandoObject();
+            model.Workers = _context.Workers.Include(r => r.Manager).Include(r => r.Request).Include(r => r.User).ThenInclude(u => u.Address).ToList();
+            model.Requests = _context.Request.ToList();
+            return View(model);
+        }
 
         // GET: Admin/Workers/Details/5
         public async Task<IActionResult> Details(int? id)

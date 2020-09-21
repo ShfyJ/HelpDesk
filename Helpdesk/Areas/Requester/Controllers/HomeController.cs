@@ -30,8 +30,8 @@ namespace HelpDesk.Areas.Requester.Controllers
         public IActionResult Index()
 
         {
-            ClaimsPrincipal currentUser = User;           
-            
+            ClaimsPrincipal currentUser = User;
+
             if (currentUser.IsInRole(SD.Role_Requester))
             {
 
@@ -55,7 +55,7 @@ namespace HelpDesk.Areas.Requester.Controllers
             if (currentUser.IsInRole(SD.Role_HeadManager))
             {
 
-                return RedirectToAction("Index", "Requests", new { Area = "HeadManager" });
+                return RedirectToAction("dashboard", "Requests", new { Area = "HeadManager" });
             }
             return View();
             //return RedirectToAction("Index", "RequestSSender", new { Area = "Requester" });

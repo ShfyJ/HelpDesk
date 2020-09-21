@@ -9,6 +9,7 @@ namespace ITHelpDesk.DataAccess.Repository.IRepository
     public interface IRepository<T> where T : class
     {
         T Get(int id);
+        T GetId(string id);
 
         IEnumerable<T> GetAll(
             Expression<Func<T, bool>> filter = null,

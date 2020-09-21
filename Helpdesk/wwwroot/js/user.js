@@ -6,7 +6,7 @@ $(document).ready(function () {
 
 
 function loadDataTable() {
-    dataTable = $('#tblData').DataTable({
+    dataTable = $('#data-table-basic').DataTable({
         "ajax": {
             "url": "/Admin/Users/GetAll"
         },
@@ -15,7 +15,7 @@ function loadDataTable() {
             { "data": "lName", "width": "15%" },
             { "data": "email", "width": "15%" },
             { "data": "phoneNumber", "width": "15%" },
-            //{ "data": "address.building", "width": "15%" },
+           // { "data": "address.building", "width": "15%" },
             { "data": "role", "width": "15%" },
             
             
@@ -33,9 +33,7 @@ function loadDataTable() {
                                 <a onclick=LockUnlock('${data.id}') class="btn btn-danger text-white" style="cursor:pointer; width:100px">
                                     <i class="fas fa-lock-open"></i> Unlock 
                                 </a>
-                                <a onclick=Delete("/Admin/Users/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
-                                    <i class="fas fa-trash-alt"></i> 
-                                </a>
+                                
                             </div>
                            `;
                     }
@@ -43,12 +41,10 @@ function loadDataTable() {
                         //user is currently unlocked
                         return `
                             <div class="text-center">
-                                <a onclick=LockUnlock('${data.id}') class="btn btn-success text-white" style="cursor:pointer; width:100px">
+                                <a onclick=LockUnlock('${data.id}') class="mb-2 mr-2 btn-transition btn btn-outline-success" style="cursor:pointer; width:100px">
                                     <i class="fas fa-lock"></i> Lock 
                                 </a>
-                                <a onclick=Delete("/Admin/Users/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
-                                        <i class="fas fa-trash-alt"></i> 
-                                </a>
+                                
                             </div>
                             
                            `;
@@ -105,3 +101,4 @@ function Delete(url) {
         }
     });
 }
+

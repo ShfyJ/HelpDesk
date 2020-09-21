@@ -22,7 +22,7 @@ using ITHelpDesk.Utility;
 using ITHelpDesk.DataAccess.Repository;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
+using System.Dynamic;
 
 namespace ITHelpDesk.Controllers
 {
@@ -73,7 +73,15 @@ namespace ITHelpDesk.Controllers
             return Json(_oNotifications);
         }
 
+        public IActionResult Dashboard()
+        {
+            dynamic model = new ExpandoObject();
+            model.Workers = _context.Workers.Include(u => u.Manager).ToList();
+            model.Requests = _context.Request.Include(u => u.Address).ToList();
+            model.Users = _context.Users.ToList();
 
+            return View(model);
+        }
 
 
         // GET: Requests

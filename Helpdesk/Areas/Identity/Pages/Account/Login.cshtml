@@ -2,28 +2,187 @@
 @model LoginModel
 
 @{
+    Layout = null;
     ViewData["Title"] = "Log in";
 }
-    <div id="logreg-forms">
-        <form id="account" method="post">
-            <h1 class="h3 mb-3 font-weight-normal text-primary" style="text-align:center;">Sign In</h1>
+<!doctype html>
+<html class="no-js" lang="">
 
-            <input asp-for="Input.Email" placeholder="Email..." type="email" class="mb-1 form-control" />
-            <input asp-for="Input.Password" placeholder="Password..." type="password" class="form-control" />
-            <button type="submit" class="btn btn-success btn-block"><i class="fas fa-sign-in-alt"></i> Sign in</button>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Login | Uzneftegaz Helpdesk</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- favicon
+        ============================================ -->
+    <link rel="shortcut icon" type="image/x-icon" href="">
+    <!-- Google Fonts
+        ============================================ -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
+    <!-- Bootstrap CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/bootstrap.min.css">
+    <!-- font awesome CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/font-awesome.min.css">
+    <!-- owl.carousel CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/owl.carousel.css">
+    <link rel="stylesheet" href="~/register/css/owl.theme.css">
+    <link rel="stylesheet" href="~/register/css/owl.transitions.css">
+    <!-- animate CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/animate.css">
+    <!-- normalize CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/normalize.css">
+    <!-- mCustomScrollbar CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/scrollbar/jquery.mCustomScrollbar.min.css">
+    <!-- wave CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/wave/waves.min.css">
+    <!-- Notika icon CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/notika-custom-icon.css">
+    <!-- main CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/main.css">
+    <!-- style CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/style.css">
+    <!-- responsive CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/responsive.css">
+    <!-- modernizr JS
+        ============================================ -->
+    <script src="~/register/js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+<body>
+    <!-- Login Register area Start-->
+    <div class="login-content" id="logreg-forms">
+        <!-- Login -->
+        
+        <div class="nk-block toggled" id="l-login">
+            <form id="account" method="post">
+                <div class="nk-form">
+                    <div class="input-group">
+                        <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-support"></i></span>
+                        <div class="nk-int-st">
+                            <input asp-for="Input.Email" placeholder="Email..." type="email" class="mb-1 form-control" />
+                        </div>
+                    </div>
+                    <div class="input-group mg-t-15">
+                        <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-edit"></i></span>
+                        <div class="nk-int-st">
+                            <input asp-for="Input.Password" placeholder="Password..." type="password" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="fm-checkbox">
+                        <label><input type="checkbox" class="i-checks"> <i></i> Keep me signed in</label>
+                    </div>
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <button type="submit"   class="btn btn-login btn-success btn-float btn btn-primary waves-effect" data-toggle="tooltip" data-placement="right" title="" data-original-title="Login"><i class="notika-icon notika-right-arrow right-arrow-ant"></i></button>
+                </div>
 
-            <a id="forgot-password" asp-page="./ForgotPassword" class="pb-2 text-info">Forgot your password?</a>
-
-            <button type="submit" asp-page-handler="SendVerificationEmail" class="btn-link text-info"
-                    style="padding:0px;margin:0px;border:0px">
-                Resend email confirmation
-            </button>
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl"
-               class="btn btn-primary text-white"><i class="fas fa-user-plus"></i> Register as a new user</a>
-        </form>
+                <div class="nk-navigation nk-lg-ic">
+                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl"  data-ma-block="#l-register"><i class="notika-icon notika-plus-symbol"></i> <span>Register</span></a>
+                    <a id="forgot-password" asp-page="./ForgotPassword" data-ma-action="nk-login-switch" data-ma-block="#l-forget-password"><i>?</i> <span>Forgot Password</span></a>
+                    <a id="resend-email" type="submit" asp-page-handler="SendVerificationEmail" data-ma-action="nk-login-switch" data-ma-block="#l-resend-email"><i class="notika-icon notika-mail"></i><span>Resend email confirmation</span></a>
+                </div>
+            </form>
         </div>
+        
+    </div>
+    <!-- jquery
+        ============================================ -->
+    <script src="~/register/js/vendor/jquery-1.12.4.min.js"></script>
+    <!-- bootstrap JS
+        ============================================ -->
+    <script src="~/register/js/bootstrap.min.js"></script>
+    <!-- wow JS
+        ============================================ -->
+    <script src="~/register/js/wow.min.js"></script>
+    <!-- price-slider JS
+        ============================================ -->
+    <script src="~/register/js/jquery-price-slider.js"></script>
+    <!-- owl.carousel JS
+        ============================================ -->
+    <script src="~/register/js/owl.carousel.min.js"></script>
+    <!-- scrollUp JS
+        ============================================ -->
+    <script src="~/register/js/jquery.scrollUp.min.js"></script>
+    <!-- meanmenu JS
+        ============================================ -->
+    <script src="~/register/js/meanmenu/jquery.meanmenu.js"></script>
+    <!-- counterup JS
+        ============================================ -->
+    <script src="~/register/js/counterup/jquery.counterup.min.js"></script>
+    <script src="~/register/js/counterup/waypoints.min.js"></script>
+    <script src="~/register/js/counterup/counterup-active.js"></script>
+    <!-- mCustomScrollbar JS
+        ============================================ -->
+    <script src="~/register/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!-- sparkline JS
+        ============================================ -->
+    <script src="~/register/js/sparkline/jquery.sparkline.min.js"></script>
+    <script src="~/register/js/sparkline/sparkline-active.js"></script>
+    <!-- flot JS
+        ============================================ -->
+    <script src="~/register/js/flot/jquery.flot.js"></script>
+    <script src="~/register/js/flot/jquery.flot.resize.js"></script>
+    <script src="~/register/js/flot/flot-active.js"></script>
+    <!-- knob JS
+        ============================================ -->
+    <script src="~/register/js/knob/jquery.knob.js"></script>
+    <script src="~/register/js/knob/jquery.appear.js"></script>
+    <script src="~/register/js/knob/knob-active.js"></script>
+    <!--  Chat JS
+        ============================================ -->
+    <script src="~/register/js/chat/jquery.chat.js"></script>
+    <!--  wave JS
+        ============================================ -->
+    <script src="~/register/js/wave/waves.min.js"></script>
+    <script src="~/register/js/wave/wave-active.js"></script>
+    <!-- icheck JS
+        ============================================ -->
+    <script src="~/register/js/icheck/icheck.min.js"></script>
+    <script src="~/register/js/icheck/icheck-active.js"></script>
+    <!--  todo JS
+        ============================================ -->
+    <script src="~/register/js/todo/jquery.todo.js"></script>
+    <!-- Login JS
+        ============================================ -->
+    <script src="~/register/js/login/login-action.js"></script>
+    <!-- plugins JS
+        ============================================ -->
+    <script src="~/register/js/plugins.js"></script>
+    <!-- main JS
+        ============================================ -->
+    <script src="~/register/js/main.js"></script>
+</body>
+    @*<div id="logreg-forms">
+            <form id="account" method="post">
+                <h1 class="h3 mb-3 font-weight-normal text-primary" style="text-align:center;">Sign In</h1>
 
-        @section Scripts {
-            <partial name="_ValidationScriptsPartial" />
-        }
+                <input asp-for="Input.Email" placeholder="Email..." type="email" class="mb-1 form-control" />
+                <input asp-for="Input.Password" placeholder="Password..." type="password" class="form-control" />
+                <button type="submit" class="btn btn-success btn-block"><i class="fas fa-sign-in-alt"></i> Sign in</button>
+
+                <a id="forgot-password" asp-page="./ForgotPassword" class="pb-2 text-info">Forgot your password?</a>
+
+                <button type="submit" asp-page-handler="SendVerificationEmail" class="btn-link text-info"
+                        style="padding:0px;margin:0px;border:0px">
+                    Resend email confirmation
+                </button>
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl"
+                   class="btn btn-primary text-white"><i class="fas fa-user-plus"></i> Register as a new user</a>
+            </form>
+        </div>*@
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+</html>

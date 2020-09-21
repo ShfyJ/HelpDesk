@@ -81,7 +81,7 @@ namespace ITHelpDesk.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.     
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RequestId,RName,RDescription,AddressId, Room")] Request request)
+        public async Task<IActionResult> Create([Bind("RequestId,RName,RDescription,AddressId, Room, ManagerId")] Request request)
         {
             if (ModelState.IsValid)
             {

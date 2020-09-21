@@ -9,6 +9,7 @@ using ITHelpDesk.Models;
 using HelpDesk.DataAccess.Data;
 using Microsoft.AspNetCore.Authorization;
 using ITHelpDesk.Utility;
+using System.Dynamic;
 
 namespace ITHelpDesk.Areas.HeadManager.Controllers
 {
@@ -22,9 +23,25 @@ namespace ITHelpDesk.Areas.HeadManager.Controllers
         {
             _context = context;
         }
-
+       
         // GET: HeadManager/Requests
         public async Task<IActionResult> Index()
+        {
+            var uNG_HELPDESKContext = _context.Request.Include(r => r.Address).Include(r => r.Manager).Include(r => r.Requestmaker).Include(r => r.Worker).ThenInclude(r => r.User);
+            return View(await uNG_HELPDESKContext.ToListAsync());
+        }
+
+        public IActionResult Dashboard()
+        {
+            dynamic model = new ExpandoObject();
+            model.Workers = _context.Workers.Include(u => u.Manager).ToList();
+            model.Requests = _context.Request.ToList();
+            model.Users = _context.Users.ToList();
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Newrequests()
         {
             var uNG_HELPDESKContext = _context.Request.Include(r => r.Address).Include(r => r.Manager).Include(r => r.Requestmaker).Include(r => r.Worker).ThenInclude(r => r.User);
             return View(await uNG_HELPDESKContext.ToListAsync());
