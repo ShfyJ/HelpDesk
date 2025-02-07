@@ -10,6 +10,8 @@ using HelpDesk.DataAccess.Data;
 using Microsoft.AspNetCore.Authorization;
 using ITHelpDesk.Utility;
 using Microsoft.AspNetCore.Identity;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace ITHelpDesk.Areas.Employee.Controllers
 {
@@ -28,7 +30,7 @@ namespace ITHelpDesk.Areas.Employee.Controllers
         // GET: Employee/Workers
         public async Task<IActionResult> Index()
         {
-            var uNG_HELPDESKContext = _context.Workers.Include(w => w.Manager).Include(w => w.User).Where(w=> w.UserId == UserManager.GetUserId(User));
+            var uNG_HELPDESKContext = _context.Workers.Include(w => w.Manager).ThenInclude(w => w.User).Include(w => w.User).Where(w=> w.UserId == UserManager.GetUserId(User));
             return View(await uNG_HELPDESKContext.ToListAsync());
         }
 
@@ -99,7 +101,8 @@ namespace ITHelpDesk.Areas.Employee.Controllers
         // POST: Employee/Workers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+
+     [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("WorkerId,Score,NOfWorks,State,Flag,Queue,Id,ManagerId")] Workers workers)
         {
@@ -168,5 +171,102 @@ namespace ITHelpDesk.Areas.Employee.Controllers
         {
             return _context.Workers.Any(e => e.WorkerId == id);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Upload_Config(IFormFile file, int? WorkerId, [Bind("WorkerId,Score,NOfWorks,State,Flag,Queue,UserId,ManagerId")] Workers workers)
+        {
+            string name = _context.Workers.Include(w => w.User).FirstOrDefault(w => w.WorkerId == WorkerId).User.Fullname;
+            var w = _context.Workers.FirstOrDefault(w => w.WorkerId == WorkerId);
+            string f = w.FileUrl;
+
+            if (WorkerId == null)
+            {
+                return NotFound();
+            }
+            if (file == null || file.Length == 0)
+                return Content("File is not selected");
+            string type = Path.GetExtension(file.FileName);
+            if ((type != ".docx") && (type != ".doc") && (type != ".pdf"))
+                return Content("Notogri fayl turi tanlandi");
+
+            try
+            {
+                workers = w;
+                workers.FileUrl = type;
+                _context.Update(workers);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!WorkersExists(workers.WorkerId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            string prevFile = name + f;
+            if (System.IO.File.Exists(Path.Combine("wwwroot/files", prevFile)))
+            {
+                // If file found, delete it    
+                System.IO.File.Delete(Path.Combine("wwwroot/files", prevFile));
+            }
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files", name + type);
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Download_Config(int WorkerId)
+        {
+            string file;
+            string name = _context.Workers.Include(w => w.User).FirstOrDefault(w => w.WorkerId == WorkerId).User.Fullname;
+            string type = _context.Workers.FirstOrDefault(w => w.WorkerId == WorkerId).FileUrl;
+            file = name + type;
+            if (file == null)
+                return Content("There is no such file");
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files", file);
+            var memory = new MemoryStream();
+            try
+            {
+                using (var stream = new FileStream(path, FileMode.Open))
+                {
+                    await stream.CopyToAsync(memory);
+                }
+                memory.Position = 0;
+                return File(memory, GetContentType(path), Path.GetFileName(path));
+            }
+            catch
+            {
+                return Content("Error occured while downloading");
+            }
+
+        }
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain" },
+                {".pdf", "application/pdf" },
+                {".doc", "application/vnd.ms-word" },
+                {".docx", "application/vnd.ms-word" }
+            };
+        }
+
+
     }
 }

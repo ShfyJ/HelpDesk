@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<ITHelpDesk.Models.Request>
-
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,16 +9,50 @@
     ViewData["Title"] = "Index";
 
     string className = "";
+
+
+    int allRequests = 0;
+    int newRequests = 0;
+    int takenRequests = 0;
+    int queueRequests = 0;
+    int undoneRequests = 0;
+    int doneRequests = 0;
+
+
+    foreach (var item in Model)
+    {
+        allRequests++;
+
+        if (item.RStatus == "blue")
+        {
+            newRequests++;
+        }
+
+        if (item.RStatus == "Taken")
+        {
+            takenRequests++;
+        }
+
+        if (item.RStatus == "yellow")
+        {
+            queueRequests++;
+        }
+
+
+        if (item.RStatus == "red")
+        {
+            undoneRequests++;
+        }
+
+
+        if (item.RStatus == "green")
+        {
+            doneRequests++;
+        }
+    }
 }
 <br />
-<div class="row">
-    <div class="col-6">
-        <h2 class="text-primary">Заявки</h2>
-    </div>
-    <div class="col-6 text-right">
-        <a class="btn btn-primary" asp-area="Manager" asp-controller="Workers"><i class="fas fa-list"></i> &nbsp; Workers List</a>
-    </div>
-</div>
+
 
 <div class="app-page-title">
     <div class="page-title-wrapper">
@@ -27,219 +62,1338 @@
                 </i>
             </div>
             <div>
-                <h2 class="text-info">All Requests</h2>
+                <h2 class="text-info"> @Localizer["request"]</h2>
                 <div class="page-title-subheading">
-                    Here you can get information, lock and unlock users
+                    @Localizer["title"]
                 </div>
             </div>
         </div>
         <div class="page-title-actions">
+            @using (Html.BeginForm("Index", "RequestManager", new { area = "Manager" }, FormMethod.Post))
+            {
+                string valueSel;
+                string mSel;
+                if (ViewBag.ydy == 123)
+                {
+                    valueSel = "Все";
+                }
+                else if (ViewBag.ydy == 0)
+                {
+                    valueSel = "Текущий год";
+                }
+                else
+                {
+                    valueSel = ViewBag.ydy.ToString();
+                }
 
+
+                if (ViewBag.mdm == 1)
+                    mSel = "Январь";
+                else if (ViewBag.mdm == 2)
+                    mSel = "Февраль";
+                else if (ViewBag.mdm == 3)
+                    mSel = "Март";
+                else if (ViewBag.mdm == 4)
+                    mSel = "Апрель";
+                else if (ViewBag.mdm == 5)
+                    mSel = "Май";
+                else if (ViewBag.mdm == 6)
+                    mSel = "Июнь";
+                else if (ViewBag.mdm == 7)
+                    mSel = "Июль";
+                else if (ViewBag.mdm == 8)
+                    mSel = "Август";
+                else if (ViewBag.mdm == 9)
+                    mSel = "Сентябрь";
+                else if (ViewBag.mdm == 10)
+                    mSel = "Октябрь";
+                else if (ViewBag.mdm == 11)
+                    mSel = "Ноябрь";
+                else if (ViewBag.mdm == 12)
+                    mSel = "Декабрь";
+                else if (ViewBag.mdm == 0)
+                    mSel = "Текущий месяц";
+                else mSel = "Все";
+
+
+
+                <div class="row">
+
+                    <div class="col">
+                        <select id="year" name="year" class="form-control" tabindex="5" asp-items="ViewBag.y">
+
+                            <option selected> @valueSel</option>
+                            <option value="123">Все</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <select id="month" name="month" class="form-control" tabindex="5" asp-items="ViewBag.m">
+                            <option selected>@mSel</option>
+                            <option value="13">Все</option>
+                        </select>
+
+
+                    </div>
+                    <div>
+                        <input type="submit" name="Export" value="Поиск" class="form-control" style="background-color:lightseagreen; color:white" />
+                    </div>
+                </div>
+            }
         </div>
+
+
         @*<div class="page-title-actions">
-                <a class="mb-2 mr-2 btn-transition btn btn-outline-info waves-effect" asp-area="HeadManager" asp-controller="Workers">
-                    <i class="fas fa-plus" aria-hidden="true"></i>
-                    &nbsp; Employees
-                </a>
-            </div>*@
+            <a class="mb-2 mr-2 btn-transition btn btn-outline-info waves-effect" asp-area="HeadManager" asp-controller="Workers">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                &nbsp; Employees
+            </a>
+        </div>*@
     </div>
 </div>
 
 <br />
-<div class="main-card mb-3 card">
-
-
-    <div class="normal-table-list mg-t-30">
-        <div class="basic-tb-hd">
-            <button class="btn btn-cyan cyan-icon-notika waves-effect tooltip-info" onclick="load();" data-toggle="tooltip" data-placement="top" title="" data-original-title="New Requests">
-                <i class="notika-icon notika-alarm"></i>
-            </button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            <button class="btn btn-orange orange-icon-notika waves-effect" data-toggle="tooltip" data-placement="top" title="" data-original-title="Requests in Control">
-                <i class="notika-icon notika-support"></i>
-            </button>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            <button class="btn btn-deeporange deeporange-icon-notika waves-effect" data-toggle="tooltip" data-placement="top" title="" data-original-title="Requests Uncompleted">
-                <i class="notika-icon notika-draft"></i>
-            </button>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            <button class="btn btn-lightgreen lightgreen-icon-notika waves-effect" data-toggle="tooltip" data-placement="top" title="" data-original-title="Requests Completed">
-                <i class="notika-icon notika-success"></i>
-            </button>
-        </div>
-        <div class="bsc-tbl-cls ">
-            <table class="table table-cl" id="table">
-
-                <thead>
-                    <tr class="">
-                        <th width="120px" data-field="Title">
-                            Title
-                        </th>
-                        <th width="200px" data-field="Description">
-                            Description
-                        </th>
-
-                        <th data-field="Status">
-                            Status
-                        </th>
-                        <th data-field="Weight">
-                            RWeight
-                        </th>
-                        <th data-field="DateTime">
-                            DateTime
-                        </th>
-                        <th data-field="Address">
-                            Address
-                        </th>
-                        <th data-field="Room">
-                            Room
-                        </th>
-
-                        <th data-field="Requester">
-                            Requester
-                        </th>
-                        <th data-field="Worker">
-                            Worker
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    @foreach (var item in Model)
-                    {
-
-                        if (item.RStatus == "blue")
-                        {
-                            className = "bg-info";
-
-                        }
-                        if (item.RStatus == "yellow")
-                        {
-                            className = "bg-warning";
-
-                        }
-                        if (item.RStatus == "red")
-                        {
-                            className = "bg-danger";
-
-                        }
-                        if (item.RStatus == "green")
-                        {
-                            className = "bg-success";
-
-                        }
-
-                        <tr class=@className>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RDescription)
-                            </td>
-
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RStatus)
-                            </td>
 
 
 
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RWeight)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RDateTime)
-                            </td>
-                            <td>
+
+<div class="basic-tb-hd">
+
+    <ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
+        <li class="nav-item">
+            <a role="tab" class="cyan-icon-notika waves-effect nav-link active" id="tab-5" data-toggle="tab" href="#tab-content-5">
+                <span><i class="notika-icon notika-file" style="color:darkcyan;"></i> @Localizer["requests"]</span>
+                <span class="badge badge-pill badge-warning">@allRequests</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a role="tab" class="cyan-icon-notika waves-effect nav-link " id="tab-1" data-toggle="tab" href="#tab-content-1">
+                <span><i class="notika-icon notika-alarm"></i> @Localizer["new"]</span>
+                <span class="badge badge-pill badge-warning">@newRequests</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a role="tab" class="cyan-icon-notika waves-effect nav-link " id="tab-0" data-toggle="tab" href="#tab-content-0">
+                <span><i class="notika-icon notika-eye"></i> @Localizer["taken"]</span>
+                <span class="badge badge-pill badge-warning">@takenRequests</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a role="tab" class="cyan-icon-notika waves-effect nav-link" id="tab-2" data-toggle="tab" href="#tab-content-2">
+                <span><i class="notika-icon notika-support" style="color:orange;"></i> @Localizer["yellow"]</span>
+                <span class="badge badge-pill badge-warning">@queueRequests</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a role="tab" class=" waves-effect nav-link" id="tab-3" data-toggle="tab" href="#tab-content-3">
+                <span><i class="notika-icon notika-draft" style="color:darkred;"></i> @Localizer["red"]</span>
+                <span class="badge badge-pill badge-warning">@undoneRequests</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a role="tab" class="cyan-icon-notika waves-effect nav-link" id="tab-4" data-toggle="tab" href="#tab-content-4">
+                <span><i class=" notika-icon notika-success" style="color:darkgreen;"></i> @Localizer["green"]</span>
+                <span class="badge badge-pill badge-warning">@doneRequests</span>
+            </a>
+        </li>
+    </ul>
+
+</div>
 
 
-                                @Html.DisplayFor(modelItem => item.Address.Full)
+<div class="tab-content">
+
+    @*--------------------------------
+        Tab for all tasks history STARTED
+         -------------------------------------*@
+
+    <div class="tab-pane tabs-animation fade show active" id="tab-content-5" role="tabpanel">
+
+        <div class="main-card mb-3 card">
+            <div class="normal-table-list mg-t-30">
+                <div class="bsc-tbl-cls ">
+                    <table class="table table-cl" id="table" style="border-collapse: separate; border-spacing: 0 3px;">
+
+                        <thead>
+                            <tr class="">
+                                <th data-field="Number" style="vertical-align:middle">
+                                    #
+                                </th>
+                                <th width="120px" data-field="Title" style="vertical-align:middle">
+                                    @Localizer["rtitle"]
+                                </th>
+                                <th width="200px" data-field="Description" style="vertical-align:middle">
+                                    @Localizer["description"]
+                                </th>
+
+                                @*<th data-field="Status">
+            Ҳолати
+        </th>*@
+                                <th data-field="DateTime" style="vertical-align:middle">
+                                    @Localizer["time"]
+                                </th>
+                                <th data-field="Weight" style="vertical-align:middle">
+                                    @Localizer["task"]
+                                </th>
+
+                                <th data-field="Address" style="vertical-align:middle">
+                                    @Localizer["building"]
+                                </th>
+                                <th data-field="Room" style="vertical-align:middle">
+                                    @Localizer["room"]
+                                </th>
+
+                                <th data-field="Requester" style="vertical-align:middle">
+                                    @Localizer["requester"]
+                                </th>
+                                <th data-field="Worker" style="vertical-align:middle">
+                                    @Localizer["worker"]
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+                                if (item.RStatus == "Taken")
+                                {
+                                    className = "bg-light";
+
+                                }
+
+                                if (item.RStatus == "blue")
+                                {
+                                    className = "bg-info";
+
+                                }
+                                if (item.RStatus == "yellow")
+                                {
+                                    className = "bg-warning";
+
+                                }
+                                if (item.RStatus == "red")
+                                {
+                                    className = "bg-danger";
+
+                                }
+                                if (item.RStatus == "green")
+                                {
+                                    className = "bg-success";
+
+                                }
+
+                            <tr class=@className>
+                                @{ var number = string.Concat("A", item.RequestId.ToString()); }
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => number)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RName)
+                                </td>
+                                <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+
+                                    @Html.DisplayFor(modelItem => item.RDescription)
+                                </td>
+
+                                @*<td>
+            @Html.DisplayFor(modelItem => item.RStatus)
+        </td>
+
+                                *@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RDateTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Tasks.child)
+                                </td>
+
+                                <td>
 
 
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Room)
-                            </td>
-
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Requestmaker.User.Fullname)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Worker.User.Fullname)
-                            </td>
-
-                            <td>
-
-                                <div class="text-center" style="width:100px">
-                                    <a asp-action="Edit" asp-route-id="@item.RequestId" class="btn btn-success text-white" style="cursor:pointer">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-info text-white" style="cursor:pointer">
-                                        <i class="fas fa-info-circle"></i>
-                                    </a>
-                                    @*<a asp-action="Delete" asp-route-id="@item.RequestId" class="btn btn-danger text-white" style="cursor:pointer">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>*@
-                                </div>
-                            </td>
-                        </tr>
+                                    @Html.DisplayFor(modelItem => item.Address.Full)
 
 
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Room)
+                                </td>
 
-                    }
-                    </tbody>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Requestmaker.User.Fullname)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Worker.User.Fullname)
+                                </td>
 
-                <tfoot>
-                    <tr class="">
-                        <th width="120px" data-field="Title">
-                            Title
-                        </th>
-                        <th width="200px" data-field="Description">
-                            Description
-                        </th>
+                                <td>
 
-                        <th data-field="Status">
-                            Status
-                        </th>
-                        <th data-field="Weight">
-                            RWeight
-                        </th>
-                        <th data-field="DateTime">
-                            DateTime
-                        </th>
-                        <th data-field="Address">
-                            Address
-                        </th>
-                        <th data-field="Room">
-                            Room
-                        </th>
+                                    <div class="text-center" style="width:100px">
+                                        @if (item.RStatus == "green")
+                                        {
 
-                        <th data-field="Requester">
-                            Requester
-                        </th>
-                        <th data-field="Worker">
-                            Worker
-                        </th>
-                        <th></th>
-                    </tr>
-                </tfoot>
+                                            <a asp-action="Edit" asp-route-id="@item.RequestId" class="btn btn-outline-dark text-dark bg-white disabled" style="cursor:pointer;">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
 
-               
-            </table>
 
-        </div>
+                                            <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect" style="cursor:pointer;">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
 
+
+                                            <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect" style="cursor:pointer;">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        }
+
+                                        @*<a asp-action="Delete" asp-route-id="@item.RequestId" class="btn btn-danger text-white" style="cursor:pointer">
+                    <i class="fas fa-trash-alt"></i>
+                </a>*@
+                                    </div>
+                                </td>
+                            </tr>
+
+
+
+                            }
+                        </tbody>
+
+                        <tfoot>
+                            <tr class="">
+                                <th data-field="Number">
+                                    #
+                                </th>
+                                <th width="120px" data-field="Title">
+                                    @Localizer["rtitle"]
+                                </th>
+                                <th width="200px" data-field="Description">
+                                    @Localizer["description"]
+                                </th>
+
+                                @*<th data-field="Status">
+            Ҳолати
+        </th>*@
+                                <th data-field="DateTime">
+                                    @Localizer["time"]
+                                </th>
+                                <th data-field="Weight">
+                                    @Localizer["task"]
+                                </th>
+
+                                <th data-field="Address">
+                                    @Localizer["building"]
+                                </th>
+                                <th data-field="Room">
+                                    @Localizer["room"]
+                                </th>
+
+                                <th data-field="Requester">
+                                    @Localizer["requester"]
+                                </th>
+                                <th data-field="Worker">
+                                    @Localizer["worker"]
+                                </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+
+
+                    </table>
+
+                </div>
+
+            </div>
         </div>
     </div>
 
-        @*<div class="text-center">
-                <a href="/Admin/Address/Upsert/AddressId" class="btn btn-success text-white" style="cursor:pointer">
-                    <i class="fas fa-edit"></i>
-                </a>
-                <a  class="btn btn-danger text-white" style="cursor:pointer">
+
+    @*--------------------------------
+        Tab for tasks in control STARTED
+         -------------------------------------*@
+
+    <div class="tab-pane tabs-animation fade " id="tab-content-0" role="tabpanel">
+
+        <div class="main-card mb-3 card">
+
+
+            <div class="normal-table-list mg-t-30">
+
+                <div class="bsc-tbl-cls ">
+                    <table class="table table-cl" id="table-doing" style="border-collapse: separate; border-spacing: 0 3px;">
+
+                        <thead>
+                            <tr class="">
+                                <th data-field="Number" style="vertical-align:middle">
+                                    #
+                                </th>
+                                <th width="120px" data-field="Title" style="vertical-align:middle">
+                                    @Localizer["rtitle"]
+                                </th>
+                                <th width="200px" data-field="Description" style="vertical-align:middle">
+                                    @Localizer["description"]
+                                </th>
+
+                                @*<th data-field="Status">
+            Ҳолати
+        </th>*@
+                                <th data-field="DateTime" style="vertical-align:middle">
+                                    @Localizer["time"]
+                                </th>
+                                <th data-field="Weight" style="vertical-align:middle">
+                                    @Localizer["task"]
+                                </th>
+
+                                <th data-field="Address" style="vertical-align:middle">
+                                    @Localizer["building"]
+                                </th>
+                                <th data-field="Room" style="vertical-align:middle">
+                                    @Localizer["room"]
+                                </th>
+
+                                <th data-field="Requester" style="vertical-align:middle">
+                                    @Localizer["requester"]
+                                </th>
+                                <th data-field="Worker" style="vertical-align:middle">
+                                    @Localizer["worker"]
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+                                if (item.RStatus == "Taken")
+                                {
+                                    className = "bg-light";
+
+
+
+                            <tr class=@className>
+                                @{ var number = string.Concat("A", item.RequestId.ToString()); }
+                                <td>
+                                    @Html.DisplayFor(modelItem => number)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RName)
+                                </td>
+                                <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+
+                                    @Html.DisplayFor(modelItem => item.RDescription)
+                                </td>
+
+                                @*<td>
+            @Html.DisplayFor(modelItem => item.RStatus)
+        </td>
+
+
+                                *@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RDateTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Tasks.child)
+                                </td>
+
+                                <td>
+
+
+                                    @Html.DisplayFor(modelItem => item.Address.Full)
+
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Room)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Requestmaker.User.Fullname)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Worker.User.Fullname)
+                                </td>
+
+                                <td>
+
+                                    <div class="text-center" style="width:100px">
+                                        @if (item.RStatus == "green")
+                                        {
+
+                                            <a asp-action="Edit" asp-route-id="@item.RequestId" class="btn btn-outline-dark text-dark bg-white disabled" style="cursor:pointer;">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+
+                                            <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect" style="cursor:pointer;">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+
+                                            <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect" style="cursor:pointer;">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        }
+
+                                    </div>
+                                </td>
+                            </tr>
+
+                                }
+
+
+
+                            }
+
+                        </tbody>
+                        <tfoot>
+                            <tr class="">
+                                <th data-field="Number">
+                                    #
+                                </th>
+
+                                <th width="120px" data-field="Title">
+                                    @Localizer["rtitle"]
+                                </th>
+                                <th width="200px" data-field="Description">
+                                    @Localizer["description"]
+                                </th>
+
+                                @*<th data-field="Status">
+            Ҳолати
+        </th>*@
+                                <th data-field="DateTime">
+                                    @Localizer["time"]
+                                </th>
+                                <th data-field="Weight">
+                                    @Localizer["task"]
+                                </th>
+
+                                <th data-field="Address">
+                                    @Localizer["building"]
+                                </th>
+                                <th data-field="Room">
+                                    @Localizer["room"]
+                                </th>
+
+                                <th data-field="Requester">
+                                    @Localizer["requester"]
+                                </th>
+                                <th data-field="Worker">
+                                    @Localizer["worker"]
+                                </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*--------------------------------
+        Tab for new tasks STARTED
+         -------------------------------------*@
+
+    <div class="tab-pane tabs-animation fade " id="tab-content-1" role="tabpanel">
+
+        <div class="main-card mb-3 card">
+
+
+            <div class="normal-table-list mg-t-30">
+
+                <div class="bsc-tbl-cls ">
+                    <table class="table table-cl" id="table-new" style="border-collapse: separate; border-spacing: 0 3px;">
+
+                        <thead>
+                            <tr class="">
+                                <th data-field="Number" style="vertical-align:middle">
+                                    #
+                                </th>
+                                <th width="120px" data-field="Title" style="vertical-align:middle">
+                                    @Localizer["rtitle"]
+                                </th>
+                                <th width="200px" data-field="Description" style="vertical-align:middle">
+                                    @Localizer["description"]
+                                </th>
+
+                                @*<th data-field="Status">
+            Ҳолати
+        </th>*@
+                                <th data-field="DateTime" style="vertical-align:middle">
+                                    @Localizer["time"]
+                                </th>
+                                <th data-field="Weight" style="vertical-align:middle">
+                                    @Localizer["task"]
+                                </th>
+
+                                <th data-field="Address" style="vertical-align:middle">
+                                    @Localizer["building"]
+                                </th>
+                                <th data-field="Room" style="vertical-align:middle">
+                                    @Localizer["room"]
+                                </th>
+
+                                <th data-field="Requester" style="vertical-align:middle">
+                                    @Localizer["requester"]
+                                </th>
+                                <th data-field="Worker" style="vertical-align:middle">
+                                    @Localizer["worker"]
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+
+
+                                if (item.RStatus == "blue")
+                                {
+                                    className = "bg-info";
+
+
+
+                            <tr class=@className>
+                                @{ var number = string.Concat("A", item.RequestId.ToString()); }
+                                <td>
+                                    @Html.DisplayFor(modelItem => number)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RName)
+                                </td>
+                                <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+
+                                    @Html.DisplayFor(modelItem => item.RDescription)
+                                </td>
+
+                                @*<td>
+            @Html.DisplayFor(modelItem => item.RStatus)
+        </td>
+
+                                *@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RDateTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Tasks.child)
+                                </td>
+
+                                <td>
+
+
+                                    @Html.DisplayFor(modelItem => item.Address.Full)
+
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Room)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Requestmaker.User.Fullname)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Worker.User.Fullname)
+                                </td>
+
+                                <td>
+
+                                    <div class="text-center" style="width:100px">
+                                        @if (item.RStatus == "green")
+                                        {
+
+                                            <a asp-action="Edit" asp-route-id="@item.RequestId" class="btn btn-outline-dark text-dark bg-white disabled" style="cursor:pointer;">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+
+                                            <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect" style="cursor:pointer;">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+
+                                            <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect" style="cursor:pointer;">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        }
+                                        @*<a asp-action="Delete" asp-route-id="@item.RequestId" class="btn btn-danger text-white" style="cursor:pointer">
                     <i class="fas fa-trash-alt"></i>
-                </a>
-            </div>*@
+                </a>*@
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                                }
+
+
+                            }
+
+                        </tbody>
+                        <tfoot>
+                            <tr class="">
+                                <th data-field="Number">
+                                    #
+                                </th>
+
+                                <th width="120px" data-field="Title">
+                                    @Localizer["rtitle"]
+                                </th>
+                                <th width="200px" data-field="Description">
+                                    @Localizer["description"]
+                                </th>
+
+                                @*<th data-field="Status">
+            Ҳолати
+        </th>*@
+                                <th data-field="DateTime">
+                                    @Localizer["time"]
+                                </th>
+                                <th data-field="Weight">
+                                    @Localizer["task"]
+                                </th>
+
+                                <th data-field="Address">
+                                    @Localizer["building"]
+                                </th>
+                                <th data-field="Room">
+                                    @Localizer["room"]
+                                </th>
+
+                                <th data-field="Requester">
+                                    @Localizer["requester"]
+                                </th>
+                                <th data-field="Worker">
+                                    @Localizer["worker"]
+                                </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*--------------------------------
+        Tab for Tasks in Queus STARTED
+         -------------------------------------*@
+
+    <div class="tab-pane tabs-animation fade " id="tab-content-2" role="tabpanel">
+
+        <div class="main-card mb-3 card">
+
+
+            <div class="normal-table-list mg-t-30">
+
+                <div class="bsc-tbl-cls ">
+                    <table class="table table-cl" id="table-queue" style="border-collapse: separate; border-spacing: 0 3px;">
+
+                        <thead>
+                            <tr class="">
+                                <th data-field="Number" style="vertical-align:middle">
+                                    #
+                                </th>
+                                <th width="120px" data-field="Title" style="vertical-align:middle">
+                                    @Localizer["rtitle"]
+                                </th>
+                                <th width="200px" data-field="Description" style="vertical-align:middle">
+                                    @Localizer["description"]
+                                </th>
+
+                                @*<th data-field="Status">
+            Ҳолати
+        </th>*@
+                                <th data-field="DateTime" style="vertical-align:middle">
+                                    @Localizer["time"]
+                                </th>
+                                <th data-field="Weight" style="vertical-align:middle">
+                                    @Localizer["task"]
+                                </th>
+
+                                <th data-field="Address" style="vertical-align:middle">
+                                    @Localizer["building"]
+                                </th>
+                                <th data-field="Room" style="vertical-align:middle">
+                                    @Localizer["room"]
+                                </th>
+
+                                <th data-field="Requester" style="vertical-align:middle">
+                                    @Localizer["requester"]
+                                </th>
+                                <th data-field="Worker" style="vertical-align:middle">
+                                    @Localizer["worker"]
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+
+
+                                if (item.RStatus == "yellow")
+                                {
+                                    className = "bg-warning";
+
+
+
+                            <tr class=@className>
+                                @{ var number = string.Concat("A", item.RequestId.ToString()); }
+                                <td>
+                                    @Html.DisplayFor(modelItem => number)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RName)
+                                </td>
+                                <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+
+                                    @Html.DisplayFor(modelItem => item.RDescription)
+                                </td>
+
+                                @*<td>
+            @Html.DisplayFor(modelItem => item.RStatus)
+        </td>
+
+                                *@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RDateTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Tasks.child)
+                                </td>
+
+                                <td>
+
+
+                                    @Html.DisplayFor(modelItem => item.Address.Full)
+
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Room)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Requestmaker.User.Fullname)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Worker.User.Fullname)
+                                </td>
+
+                                <td>
+
+                                    <div class="text-center" style="width:100px">
+                                        @if (item.RStatus == "green")
+                                        {
+
+                                            <a asp-action="Edit" asp-route-id="@item.RequestId" class="btn btn-outline-dark text-dark bg-white disabled" style="cursor:pointer;">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+
+                                            <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect" style="cursor:pointer;">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+
+                                            <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect" style="cursor:pointer;">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        }
+                                        @*<a asp-action="Delete" asp-route-id="@item.RequestId" class="btn btn-danger text-white" style="cursor:pointer">
+                    <i class="fas fa-trash-alt"></i>
+                </a>*@
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                                }
+
+
+                            }
+
+                        </tbody>
+                        <tfoot>
+                            <tr class="">
+                                <th data-field="Number">
+                                    #
+                                </th>
+
+                                <th width="120px" data-field="Title">
+                                    @Localizer["rtitle"]
+                                </th>
+                                <th width="200px" data-field="Description">
+                                    @Localizer["description"]
+                                </th>
+
+                                @*<th data-field="Status">
+            Ҳолати
+        </th>*@
+
+                                <th data-field="DateTime">
+                                    @Localizer["time"]
+                                </th>
+                                <th data-field="Weight">
+                                    @Localizer["task"]
+                                </th>
+
+                                <th data-field="Address">
+                                    @Localizer["building"]
+                                </th>
+                                <th data-field="Room">
+                                    @Localizer["room"]
+                                </th>
+
+                                <th data-field="Requester">
+                                    @Localizer["requester"]
+                                </th>
+                                <th data-field="Worker">
+                                    @Localizer["worker"]
+                                </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*--------------------------------
+        Tab for tasks uncompleted STARTED
+         -------------------------------------*@
+
+
+    <div class="tab-pane tabs-animation fade " id="tab-content-3" role="tabpanel">
+
+        <div class="main-card mb-3 card">
+
+
+            <div class="normal-table-list mg-t-30">
+
+                <div class="bsc-tbl-cls ">
+                    <table class="table table-cl" id="table-undone" style="border-collapse: separate; border-spacing: 0 3px;">
+
+                        <thead>
+                            <tr class="">
+                                <th data-field="Number" style="vertical-align:middle">
+                                    #
+                                </th>
+                                <th width="120px" data-field="Title" style="vertical-align:middle">
+                                    @Localizer["rtitle"]
+                                </th>
+                                <th width="200px" data-field="Description" style="vertical-align:middle">
+                                    @Localizer["description"]
+                                </th>
+
+                                @*<th data-field="Status">
+            Ҳолати
+        </th>*@
+                                <th data-field="DateTime" style="vertical-align:middle">
+                                    @Localizer["time"]
+                                </th>
+                                <th data-field="Weight" style="vertical-align:middle">
+                                    @Localizer["task"]
+                                </th>
+
+                                <th data-field="Address" style="vertical-align:middle">
+                                    @Localizer["building"]
+                                </th>
+                                <th data-field="Room" style="vertical-align:middle">
+                                    @Localizer["room"]
+                                </th>
+
+                                <th data-field="Requester" style="vertical-align:middle">
+                                    @Localizer["requester"]
+                                </th>
+                                <th data-field="Worker" style="vertical-align:middle">
+                                    @Localizer["worker"]
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+
+
+                                if (item.RStatus == "red")
+                                {
+                                    className = "bg-danger";
+
+
+
+                            <tr class=@className>
+                                @{ var number = string.Concat("A", item.RequestId.ToString()); }
+                                <td>
+                                    @Html.DisplayFor(modelItem => number)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RName)
+                                </td>
+                                <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+
+                                    @Html.DisplayFor(modelItem => item.RDescription)
+                                </td>
+
+                                @*<td>
+            @Html.DisplayFor(modelItem => item.RStatus)
+        </td>
+
+                                *@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RDateTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Tasks.child)
+                                </td>
+
+                                <td>
+
+
+                                    @Html.DisplayFor(modelItem => item.Address.Full)
+
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Room)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Requestmaker.User.Fullname)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Worker.User.Fullname)
+                                </td>
+
+                                <td>
+
+                                    <div class="text-center" style="width:100px">
+                                        @if (item.RStatus == "green")
+                                        {
+
+                                            <a asp-action="Edit" asp-route-id="@item.RequestId" class="btn btn-outline-dark text-dark bg-white disabled" style="cursor:pointer;">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+
+                                            <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect" style="cursor:pointer;">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+
+                                            <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect" style="cursor:pointer;">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        }
+                                        @*<a asp-action="Delete" asp-route-id="@item.RequestId" class="btn btn-danger text-white" style="cursor:pointer">
+                    <i class="fas fa-trash-alt"></i>
+                </a>*@
+                                    </div>
+                                </td>
+                            </tr>
+
+                                }
+
+
+
+                            }
+
+                        </tbody>
+                        <tfoot>
+                            <tr class="">
+                                <th data-field="Number">
+                                    #
+                                </th>
+                                <th width="120px" data-field="Title">
+                                    @Localizer["rtitle"]
+                                </th>
+                                <th width="200px" data-field="Description">
+                                    @Localizer["description"]
+                                </th>
+
+                                @*<th data-field="Status">
+            Ҳолати
+        </th>*@
+                                <th data-field="DateTime">
+                                    @Localizer["time"]
+                                </th>
+                                <th data-field="Weight">
+                                    @Localizer["task"]
+                                </th>
+
+                                <th data-field="Address">
+                                    @Localizer["building"]
+                                </th>
+                                <th data-field="Room">
+                                    @Localizer["room"]
+                                </th>
+
+                                <th data-field="Requester">
+                                    @Localizer["requester"]
+                                </th>
+                                <th data-field="Worker">
+                                    @Localizer["worker"]
+                                </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    @*--------------------------------
+        Tab for tasks completed STARTED
+         -------------------------------------*@
+
+
+    <div class="tab-pane tabs-animation fade " id="tab-content-4" role="tabpanel">
+
+        <div class="main-card mb-3 card">
+
+
+            <div class="normal-table-list mg-t-30">
+
+                <div class="bsc-tbl-cls ">
+                    <table class="table table-cl" id="table-done" style="border-collapse: separate; border-spacing: 0 3px;">
+
+                        <thead>
+                            <tr class="">
+                                <th data-field="Number" style="vertical-align:middle">
+                                    #
+                                </th>
+                                <th width="120px" data-field="Title" style="vertical-align:middle">
+                                    @Localizer["rtitle"]
+                                </th>
+                                <th width="200px" data-field="Description" style="vertical-align:middle">
+                                    @Localizer["description"]
+                                </th>
+
+                                @*<th data-field="Status">
+            Ҳолати
+        </th>*@
+                                <th data-field="DateTime" style="vertical-align:middle">
+                                    @Localizer["time"]
+                                </th>
+                                <th data-field="Weight" style="vertical-align:middle">
+                                    @Localizer["task"]
+                                </th>
+
+                                <th data-field="Address" style="vertical-align:middle">
+                                    @Localizer["building"]
+                                </th>
+                                <th data-field="Room" style="vertical-align:middle">
+                                    @Localizer["room"]
+                                </th>
+
+                                <th data-field="Requester" style="vertical-align:middle">
+                                    @Localizer["requester"]
+                                </th>
+                                <th data-field="Worker" style="vertical-align:middle">
+                                    @Localizer["worker"]
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+
+
+                                if (item.RStatus == "green")
+                                {
+                                    className = "bg-success";
+
+
+
+                            <tr class=@className>
+                                @{ var number = string.Concat("A", item.RequestId.ToString()); }
+                                <td>
+                                    @Html.DisplayFor(modelItem => number)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RName)
+                                </td>
+                                <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+
+                                    @Html.DisplayFor(modelItem => item.RDescription)
+                                </td>
+
+                                @*<td>
+            @Html.DisplayFor(modelItem => item.RStatus)
+        </td>
+                                *@
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RDateTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Tasks.child)
+                                </td>
+
+                                <td>
+
+
+                                    @Html.DisplayFor(modelItem => item.Address.Full)
+
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Room)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Requestmaker.User.Fullname)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Worker.User.Fullname)
+                                </td>
+
+                                <td>
+
+                                    <div class="text-center" style="width:100px">
+                                        @if (item.RStatus == "green")
+                                        {
+
+                                            <a asp-action="Edit" asp-route-id="@item.RequestId" class="btn btn-outline-dark text-dark bg-white disabled" style="cursor:pointer;">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+
+                                            <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect" style="cursor:pointer;">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+
+                                            <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-default notika-btn-default waves-effect" style="cursor:pointer;">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        }
+                                        @*<a asp-action="Delete" asp-route-id="@item.RequestId" class="btn btn-danger text-white" style="cursor:pointer">
+                    <i class="fas fa-trash-alt"></i>
+                </a>*@
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                                }
+
+
+                            }
+
+                        </tbody>
+                        <tfoot>
+                            <tr class="">
+                                <th data-field="Number">
+                                    #
+                                </th>
+                                <th width="120px" data-field="Title">
+                                    @Localizer["rtitle"]
+                                </th>
+                                <th width="200px" data-field="Description">
+                                    @Localizer["description"]
+                                </th>
+
+                                @*<th data-field="Status">
+            Ҳолати
+        </th>*@
+                                <th data-field="DateTime">
+                                    @Localizer["time"]
+                                </th>
+                                <th data-field="Weight">
+                                    @Localizer["task"]
+                                </th>
+
+                                <th data-field="Address">
+                                    @Localizer["building"]
+                                </th>
+                                <th data-field="Room">
+                                    @Localizer["room"]
+                                </th>
+
+                                <th data-field="Requester">
+                                    @Localizer["requester"]
+                                </th>
+                                <th data-field="Worker">
+                                    @Localizer["worker"]
+                                </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*--------------------------------
+        Tabs finished here
+         -------------------------------------*@
+
+
+</div>
 
 
 
 
-        
-          
+
+
+
+
+

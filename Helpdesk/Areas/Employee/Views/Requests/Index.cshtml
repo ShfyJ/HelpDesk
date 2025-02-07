@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<ITHelpDesk.Models.Request>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 
 @{
@@ -8,8 +10,10 @@
     ViewData["Title"] = "Index";
 
     string className = "";
+    bool status = true;
 }
 <br />
+
 
 
 <div class="app-page-title">
@@ -20,200 +24,983 @@
                 </i>
             </div>
             <div>
-                <h2 class="text-info">All Requests</h2>
+                <h2 style="color:darkcyan">@Localizer["requests"]</h2>
                 <div class="page-title-subheading">
-                    Here you can get information, lock and unlock users
+                    @Localizer["here"]
                 </div>
             </div>
         </div>
         <div class="page-title-actions">
 
         </div>
-        @*<div class="page-title-actions">
-                <a class="mb-2 mr-2 btn-transition btn btn-outline-info waves-effect" asp-area="HeadManager" asp-controller="Workers">
-                    <i class="fas fa-plus" aria-hidden="true"></i>
-                    &nbsp; Employees
+        <div class="page-title-actions">
+
+            <div class="text-center">
+
+                <div class="animated lightSpeedIn">
+                    <div class="swatch-holder swatch-holder-lg bg-happy-green" data-toggle="tooltip" data-placement="left"
+                         data-original-title="@Localizer["score"]"><b style="color:black">@ViewBag.score</b></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="basic-tb-hd">
+
+        <ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
+            <li class="nav-item">
+                <a role="tab" class="cyan-icon-notika waves-effect nav-link active" id="tab-0" data-toggle="tab" href="#tab-content-0">
+                    <span><i class="notika-icon notika-alarm" style="color:darkcyan;"></i> @Localizer["all"]</span>
                 </a>
-            </div>*@
+            </li>
+            <li class="nav-item">
+                <a role="tab" class="cyan-icon-notika waves-effect nav-link" id="tab-1" data-toggle="tab" href="#tab-content-1">
+                    <span><i class="notika-icon notika-support" style="color:orange;"></i> @Localizer["queue"]</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a role="tab" class=" waves-effect nav-link" id="tab-2" data-toggle="tab" href="#tab-content-2">
+                    <span><i class="notika-icon notika-draft" style="color:darkred;"></i> @Localizer["red"]</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a role="tab" class="cyan-icon-notika waves-effect nav-link" id="tab-3" data-toggle="tab" href="#tab-content-3">
+                    <span><i class=" notika-icon notika-success" style="color:darkgreen;"></i> @Localizer["green"]</span>
+                </a>
+            </li>
+        </ul>
+
     </div>
-</div>
-
-<br />
-<div class="main-card mb-3 card">
 
 
-    <div class="normal-table-list mg-t-30">
-        <div class="basic-tb-hd">
-            <button class="btn btn-cyan cyan-icon-notika waves-effect tooltip-info" onclick="load();" data-toggle="tooltip" data-placement="top" title="" data-original-title="New Requests">
-                <i class="notika-icon notika-alarm"></i>
-            </button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            <button class="btn btn-orange orange-icon-notika waves-effect" data-toggle="tooltip" data-placement="top" title="" data-original-title="Requests in Control">
-                <i class="notika-icon notika-support"></i>
-            </button>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            <button class="btn btn-deeporange deeporange-icon-notika waves-effect" data-toggle="tooltip" data-placement="top" title="" data-original-title="Requests Uncompleted">
-                <i class="notika-icon notika-draft"></i>
-            </button>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            <button class="btn btn-lightgreen lightgreen-icon-notika waves-effect" data-toggle="tooltip" data-placement="top" title="" data-original-title="Requests Completed">
-                <i class="notika-icon notika-success"></i>
-            </button>
+
+    @foreach (var itemDefault in Model)
+    {
+        if (itemDefault.RStatus.Equals("Taken"))
+        {
+            status = false;
+            break;
+        }
+    }
+
+    @*--------------------------------
+        Tab for the TASK IN QUEUE STARTED
+
+        -------------------------------------*@
+
+
+
+    @if (!status)
+    {
+        <div class="main-card mb-3 card">
+
+
+            <div class="normal-table-list mg-t-30">
+                <div class="basic-tb-hd">
+                    <h2>@Localizer["taken"]</h2>
+                    <p class="text-danger">@Localizer["can"]</p>
+                </div>
+                <div class="bsc-tbl-cls ">
+                    <div class="table-responsive">
+                        <table class="table table-cl" style="border-collapse: separate; border-spacing: 0 3px;">
+
+                            <thead>
+                                <tr class="">
+                                    <th width="120px" data-field="Title" style="vertical-align:middle">
+                                        @Localizer["rtitle"]
+                                    </th>
+                                    <th width="200px" data-field="Description" style="vertical-align:middle">
+                                        @Localizer["description"]
+                                    </th>
+
+
+                                    <th data-field="Weight" style="vertical-align:middle">
+                                        @Localizer["task"]
+                                    </th>
+
+                                    <th data-field="DateTime" style="vertical-align:middle">
+                                        @Localizer["time"]
+                                    </th>
+                                    <th data-field="Address" style="vertical-align:middle">
+                                        @Localizer["building"]
+                                    </th>
+                                    <th data-field="Room" style="vertical-align:middle">
+                                        @Localizer["room"]
+                                    </th>
+
+                                    <th data-field="Requester" style="vertical-align:middle">
+                                        @Localizer["sender"]
+                                    </th>
+                                    <th data-field="Phone" style="vertical-align:middle">
+                                        @Localizer["phone"]
+                                    </th>
+                                    <th data-field="comment" style="vertical-align:middle">
+                                        Коммент
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+
+                            <tbody>
+
+
+                                @foreach (var item in Model)
+                                {
+                                    if (item.RStatus == "Taken")
+                                    {
+                                        className = "bg-light";
+
+                                        <tr class='@className clickable-row'>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.RName)
+                                            </td>
+                                            <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+
+                                                @Html.DisplayFor(modelItem => item.RDescription)
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Tasks.child)
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.RDateTime)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Address.Full)
+                                                @Html.DisplayFor(modelItem => item.Room)
+
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Room)
+
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Requestmaker.User.Fullname)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Requestmaker.User.PhoneNumber)
+                                            </td>
+                                            <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+                                                @Html.DisplayFor(modelItem => item.Worker_Comment)
+                                            </td>
+                                            <td>
+
+                                                <div class="text-center" style="width:100px">
+                                                    <div class="row">
+                                                        <a asp-action="edit" asp-route-id="@item.RequestId" class="btn notika-btn-amber waves-effect" style="cursor:pointer">
+                                                            <i class="fas fa-edit"> @Localizer["comment"]</i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="row" style="margin-top:10px">
+                                                        <a onclick=Deny("/Employee/Requests/Deny/@item.RequestId") class="btn text-white notika-btn-red waves-effect" style="cursor:pointer">
+                                                            <i class="far fa-window-close"> @Localizer["deny"]</i>
+                                                        </a>
+                                                    </div>
+
+
+
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="bsc-tbl-cls ">
-            <table class="table table-cl" id="table">
+    }
+    @*--------------------------------
+        Table for The TASK IN PROCESS ENDED
+         -------------------------------------*@
 
-                <thead>
-                    <tr class="">
-                        <th width="120px" data-field="Title">
-                            Title
-                        </th>
-                        <th width="200px" data-field="Description">
-                            Description
-                        </th>
-
-                        <th data-field="Status">
-                            Status
-                        </th>
-                        <th data-field="Weight">
-                            RWeight
-                        </th>
-
-                        <th data-field="DateTime">
-                            DateTime
-                        </th>
-                        <th data-field="Address">
-                            Address
-                        </th>
-                        <th data-field="Room">
-                            Room
-                        </th>
-
-                        <th data-field="Requester">
-                            Requester
-                        </th>
-                        <th data-field="Phone">
-                            Requester Phone
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-
-                        if (item.RStatus == "blue")
-                        {
-                            className = "bg-info";
-
-                        }
-                        if (item.RStatus == "yellow")
-                        {
-                            className = "bg-warning";
-
-                        }
-                        if (item.RStatus == "red")
-                        {
-                            className = "bg-danger";
-
-                        }
-                        if (item.RStatus == "green")
-                        {
-                            className = "bg-success";
-
-                        }
-                        <tr class='@className clickable-row'>
-
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RDescription)
-                            </td>
-
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RStatus)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RWeight)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RDateTime)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Address.Full)
-                                @Html.DisplayFor(modelItem => item.Room)
-
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Room)
-
-                            </td>
-
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Requestmaker.User.Fullname)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Requestmaker.User.PhoneNumber)
-                            </td>
-                            <td>
-
-                                <div class="text-center" style="width:100px">
-
-                                    <a asp-action="Details" asp-route-id="@item.RequestId" class="btn notika-btn-black text-white" style="cursor:pointer">
-                                        <i class="fas fa-info-circle"></i>
-                                    </a>
-                                    <a asp-action="Accept" asp-route-id="@item.RequestId" class="btn btn-success text-white" style="cursor:pointer">
-                                        <i class="fas fa-check"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-
-                </tbody>
-
-                <tfoot>
-                    <tr class="">
-                        <th width="120px" data-field="Title">
-                            Title
-                        </th>
-                        <th width="200px" data-field="Description">
-                            Description
-                        </th>
-
-                        <th data-field="Status">
-                            Status
-                        </th>
-                        <th data-field="Weight">
-                            RWeight
-                        </th>
-                        <th data-field="DateTime">
-                            DateTime
-                        </th>
-                        <th data-field="Address">
-                            Address
-                        </th>
-                        <th data-field="Room">
-                            Room
-                        </th>
-
-                        <th data-field="Requester">
-                            Requester
-                        </th>
-                        <th data-field="Worker">
-                            Worker
-                        </th>
-                        <th></th>
-                    </tr>
-                </tfoot>
-
-            </table>
+    @*--------------------------------
+        Tab for all tasks history STARTED
+         -------------------------------------*@
+    <div class="tab-content">
+        <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
+            <div class="main-card mb-3 card">
 
 
+                <div class="normal-table-list mg-t-30">
+
+                    <div class="bsc-tbl-cls ">
+                        <div class="table-responsive">
+                            <table class="table table-cl" id="table" style="border-collapse: separate; border-spacing: 0 3px;">
+
+
+                                @if (status)
+                                {
+                                    <thead>
+                                        <tr class="">
+                                            <th width="120px" data-field="Title" style="vertical-align:middle">
+                                                @Localizer["rtitle"]
+                                            </th>
+                                            <th width="200px" data-field="Description" style="vertical-align:middle">
+                                                @Localizer["description"]
+                                            </th>
+
+
+                                            <th data-field="Weight" style="vertical-align:middle">
+                                                @Localizer["task"]
+                                            </th>
+
+                                            <th data-field="DateTime" style="vertical-align:middle">
+                                                @Localizer["time"]
+                                            </th>
+                                            <th data-field="Address" style="vertical-align:middle">
+                                                @Localizer["building"]
+                                            </th>
+                                            <th data-field="Room" style="vertical-align:middle">
+                                                @Localizer["room"]
+                                            </th>
+
+                                            <th data-field="Requester" style="vertical-align:middle">
+                                                @Localizer["sender"]
+                                            </th>
+                                            <th data-field="Phone" style="vertical-align:middle">
+                                                @Localizer["phone"]
+                                            </th>
+                                            <th data-field="comment" style="vertical-align:middle">
+                                                Коммент
+                                            </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                }
+
+                                <tbody>
+
+
+                                    @foreach (var item in Model)
+                                    {
+                                        if (item.RStatus == "Taken")
+                                        {
+                                            continue;
+
+                                        }
+
+                                        else if (item.RStatus == "blue")
+                                        {
+                                            className = "#276384";
+
+                                        }
+                                        else if (item.RStatus == "yellow")
+                                        {
+                                            className = "#dfdc4b";
+
+                                        }
+                                        else if (item.RStatus == "red")
+                                        {
+                                            className = "#cf2b33";
+                                        }
+                                        else if (item.RStatus == "green")
+                                        {
+                                            className = "#63c15a";
+                                        }
+                                        <tr style="background-color:@className" class='clickable-row'>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.RName)
+                                            </td>
+                                            <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+
+                                                @Html.DisplayFor(modelItem => item.RDescription)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Tasks.child)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.RDateTime)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Address.Full)
+                                                @Html.DisplayFor(modelItem => item.Room)
+
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Room)
+
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Requestmaker.User.Fullname)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Requestmaker.User.PhoneNumber)
+                                            </td>
+                                            <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+                                                @Html.DisplayFor(modelItem => item.Worker_Comment)
+                                            </td>
+                                            <td>
+
+                                                <div class="text-center" style="width:130px">
+
+
+
+                                               
+                                                    
+
+                                                    @if (item.RStatus == "green")
+                                                    {
+                                                        <p class="text-white"><i class="fas fa-check-double"></i> <b> @Localizer["done"]</b> </p>
+                                                    }
+                                                    else if (item.RStatus == "red")
+                                                    {
+                                                        <p class="text-white"><i class="fas fa-ban"></i><b> @Localizer["refuse"]</b>  </p>
+                                                    }
+
+                                                    else
+                                                    {
+                                                <a onclick=Accept("/Employee/Requests/Accept/@item.RequestId") class="btn btn-default notika-btn-default waves-effect"
+                                                   data-toggle="tooltip" data-placement="right" style="vertical-align: middle;">
+                                                    <i class="notika-icon notika-next"></i> @Localizer["get"]
+                                                </a>
+
+
+                                                    }
+
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+
+                                <tfoot>
+                                    <tr class="">
+                                        <th width="120px" data-field="Title">
+                                            @Localizer["rtitle"]
+                                        </th>
+                                        <th width="200px" data-field="Description">
+                                            @Localizer["description"]
+                                        </th>
+
+
+
+                                        <th data-field="Weight">
+                                            @Localizer["task"]
+                                        </th>
+
+                                        <th data-field="DateTime">
+                                            @Localizer["time"]
+                                        </th>
+                                        <th data-field="Address">
+                                            @Localizer["building"]
+                                        </th>
+                                        <th data-field="Room">
+                                            @Localizer["room"]
+                                        </th>
+
+                                        <th data-field="Requester">
+                                            @Localizer["sender"]
+                                        </th>
+                                        <th data-field="Phone">
+                                            @Localizer["phone"]
+                                        </th>
+                                        <th data-field="comment" style="vertical-align:middle">
+                                            Коммент
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
+
+        @*--------------------------------
+            Tab for all tasks history ENDED
+             -------------------------------------*@
+
+        @*--------------------------------
+            Tab for tasks in Queue history STARTED
+             -------------------------------------*@
+
+        <div class="tab-pane tabs-animation fade" id="tab-content-1" role="tabpanel">
+            <div class="main-card mb-3 card">
+
+
+                <div class="normal-table-list mg-t-30">
+
+                    <div class="bsc-tbl-cls ">
+                        <div class="table-responsive">
+                            <table class="table table-cl" id="table-queue" style="border-collapse: separate; border-spacing: 0 3px;">
+
+                                @if (status)
+                                {
+                                    <thead>
+                                        <tr class="">
+                                            <th width="120px" data-field="Title" style="vertical-align:middle">
+                                                @Localizer["rtitle"]
+                                            </th>
+                                            <th width="200px" data-field="Description" style="vertical-align:middle">
+                                                @Localizer["description"]
+                                            </th>
+
+
+                                            <th data-field="Weight" style="vertical-align:middle">
+                                                @Localizer["task"]
+                                            </th>
+
+                                            <th data-field="DateTime" style="vertical-align:middle">
+                                                @Localizer["time"]
+                                            </th>
+                                            <th data-field="Address" style="vertical-align:middle">
+                                                @Localizer["building"]
+                                            </th>
+                                            <th data-field="Room" style="vertical-align:middle">
+                                                @Localizer["room"]
+                                            </th>
+
+                                            <th data-field="Requester" style="vertical-align:middle">
+                                                @Localizer["sender"]
+                                            </th>
+                                            <th data-field="Phone" style="vertical-align:middle">
+                                                @Localizer["phone"]
+                                            </th>
+                                            <th data-field="comment" style="vertical-align:middle">
+                                                Коммент
+                                            </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                }
+                                <tbody>
+
+
+                                    @foreach (var item in Model)
+                                    {
+
+                                        if (item.RStatus == "yellow")
+                                        {
+
+                                            <tr class='clickable-row' style="background-color:#dfdc4b">
+
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.RName)
+                                                </td>
+                                                <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+
+                                                    @Html.DisplayFor(modelItem => item.RDescription)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Tasks.child)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.RDateTime)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Address.Full)
+                                                    @Html.DisplayFor(modelItem => item.Room)
+
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Room)
+
+                                                </td>
+
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Requestmaker.User.Fullname)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Requestmaker.User.PhoneNumber)
+                                                </td>
+                                                <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+                                                    @Html.DisplayFor(modelItem => item.Worker_Comment)
+                                                </td>
+                                                <td>
+
+                                                    <div class="text-center" style="width:130px">
+
+
+                                                        <a onclick=Accept("/Employee/Requests/Accept/@item.RequestId") class="btn btn-default notika-btn-default waves-effect"
+                                                           data-toggle="tooltip" data-placement="right" style="vertical-align: middle;">
+                                                            <i class="notika-icon notika-next"></i> @Localizer["get"]
+                                                        </a>
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+                                </tbody>
+
+                                <tfoot>
+                                    <tr class="">
+                                        <th width="120px" data-field="Title">
+                                            @Localizer["rtitle"]
+                                        </th>
+                                        <th width="200px" data-field="Description">
+                                            @Localizer["description"]
+                                        </th>
+                                        <th data-field="Weight">
+                                            @Localizer["task"]
+                                        </th>
+
+                                        <th data-field="DateTime">
+                                            @Localizer["time"]
+                                        </th>
+                                        <th data-field="Address">
+                                            @Localizer["building"]
+                                        </th>
+                                        <th data-field="Room">
+                                            @Localizer["room"]
+                                        </th>
+
+                                        <th data-field="Requester">
+                                            @Localizer["sender"]
+                                        </th>
+                                        <th data-field="Phone">
+                                            @Localizer["phone"]
+                                        </th>
+                                        <th data-field="comment" style="vertical-align:middle">
+                                            Коммент
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*--------------------------------
+            Tab for tasks in Queue history ENDED
+             -------------------------------------*@
+
+        @*--------------------------------
+            Tab for uncompleted tasks history STARTED
+             -------------------------------------*@
+
+        <div class="tab-pane tabs-animation fade " id="tab-content-2" role="tabpanel">
+            <div class="main-card mb-3 card">
+
+
+                <div class="normal-table-list mg-t-30">
+
+                    <div class="bsc-tbl-cls ">
+                        <table class="table table-cl" id="table-undone" style="border-collapse: separate; border-spacing: 0 3px;">
+
+
+                            @if (status)
+                            {
+                                <thead>
+                                    <tr class="">
+                                        <th width="120px" data-field="Title" style="vertical-align:middle">
+                                            @Localizer["rtitle"]
+                                        </th>
+                                        <th width="200px" data-field="Description" style="vertical-align:middle">
+                                            @Localizer["description"]
+                                        </th>
+
+
+                                        <th data-field="Weight" style="vertical-align:middle">
+                                            @Localizer["task"]
+                                        </th>
+
+                                        <th data-field="DateTime" style="vertical-align:middle">
+                                            @Localizer["time"]
+                                        </th>
+                                        <th data-field="Address" style="vertical-align:middle">
+                                            @Localizer["building"]
+                                        </th>
+                                        <th data-field="Room" style="vertical-align:middle">
+                                            @Localizer["room"]
+                                        </th>
+
+                                        <th data-field="Requester" style="vertical-align:middle">
+                                            @Localizer["sender"]
+                                        </th>
+                                        <th data-field="Phone" style="vertical-align:middle">
+                                            @Localizer["phone"]
+                                        </th>
+                                        <th data-field="comment" style="vertical-align:middle">
+                                            Коммент
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                            }
+
+                            <tbody>
+
+
+                                @foreach (var item in Model)
+                                {
+
+
+                                    if (item.RStatus == "red")
+                                    {
+                                        className = "bg-danger";
+
+
+                                        <tr class='clickable-row' style="background-color:#d12c34">
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.RName)
+                                            </td>
+                                            <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+
+                                                @Html.DisplayFor(modelItem => item.RDescription)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Tasks.child)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.RDateTime)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Address.Full)
+                                                @Html.DisplayFor(modelItem => item.Room)
+
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Room)
+
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Requestmaker.User.Fullname)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Requestmaker.User.PhoneNumber)
+                                            </td>
+                                            <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+                                                @Html.DisplayFor(modelItem => item.Worker_Comment)
+                                            </td>
+                                            <td>
+
+                                                <div class="text-center" style="width:100px">
+
+                                                    <p> @Localizer["refuse"] </p>
+
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+
+                            <tfoot>
+                                <tr class="">
+                                    <th width="120px" data-field="Title">
+                                        @Localizer["rtitle"]
+                                    </th>
+                                    <th width="200px" data-field="Description">
+                                        @Localizer["description"]
+                                    </th>
+                                    <th data-field="Weight">
+                                        @Localizer["task"]
+                                    </th>
+
+                                    <th data-field="DateTime">
+                                        @Localizer["time"]
+                                    </th>
+                                    <th data-field="Address">
+                                        @Localizer["building"]
+                                    </th>
+                                    <th data-field="Room">
+                                        @Localizer["room"]
+                                    </th>
+
+                                    <th data-field="Requester">
+                                        @Localizer["sender"]
+                                    </th>
+                                    <th data-field="Phone">
+                                        @Localizer["phone"]
+                                    </th>
+                                    <th data-field="comment" style="vertical-align:middle">
+                                        Коммент
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*--------------------------------
+             Tab for uncompleted tasks history ENDED
+            -------------------------------------*@
+
+        @*--------------------------------
+             Tab for completed tasks history STARTED
+            -------------------------------------*@
+
+        <div class="tab-pane tabs-animation fade " id="tab-content-3" role="tabpanel">
+            <div class="main-card mb-3 card">
+
+
+                <div class="normal-table-list mg-t-30">
+
+                    <div class="bsc-tbl-cls ">
+                        <table class="table table-cl" id="table-done" style="border-collapse: separate; border-spacing: 0 3px;">
+
+
+                            @if (status)
+                            {
+                                <thead>
+                                    <tr class="">
+                                        <th width="120px" data-field="Title" style="vertical-align:middle">
+                                            @Localizer["rtitle"]
+                                        </th>
+                                        <th width="200px" data-field="Description" style="vertical-align:middle">
+                                            @Localizer["description"]
+                                        </th>
+
+
+                                        <th data-field="Weight" style="vertical-align:middle">
+                                            @Localizer["task"]
+                                        </th>
+
+                                        <th data-field="DateTime" style="vertical-align:middle">
+                                            @Localizer["time"]
+                                        </th>
+                                        <th data-field="Address" style="vertical-align:middle">
+                                            @Localizer["building"]
+                                        </th>
+                                        <th data-field="Room" style="vertical-align:middle">
+                                            @Localizer["room"]
+                                        </th>
+
+                                        <th data-field="Requester" style="vertical-align:middle">
+                                            @Localizer["sender"]
+                                        </th>
+                                        <th data-field="Phone" style="vertical-align:middle">
+                                            @Localizer["phone"]
+                                        </th>
+                                        <th data-field="comment" style="vertical-align:middle">
+                                            Коммент
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                            }
+
+                            <tbody>
+
+
+                                @foreach (var item in Model)
+                                {
+
+                                    if (item.RStatus == "green")
+                                    {
+                                        className = "bg-success";
+
+                                        <tr class='@className clickable-row'>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.RName)
+                                            </td>
+                                            <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+
+                                                @Html.DisplayFor(modelItem => item.RDescription)
+                                            </td>
+
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Tasks.child)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.RDateTime)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Address.Full)
+                                                @Html.DisplayFor(modelItem => item.Room)
+
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Room)
+
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Requestmaker.User.Fullname)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Requestmaker.User.PhoneNumber)
+                                            </td>
+                                            <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+                                                @Html.DisplayFor(modelItem => item.Worker_Comment)
+                                            </td>
+                                            <td>
+
+                                                <div class="text-center" style="width:100px">
+
+
+                                                    <p> @Localizer["done"] </p>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+
+                            <tfoot>
+                                <tr class="">
+                                    <th width="120px" data-field="Title">
+                                        @Localizer["rtitle"]
+                                    </th>
+                                    <th width="200px" data-field="Description">
+                                        @Localizer["description"]
+                                    </th>
+                                    <th data-field="Weight">
+                                        @Localizer["task"]
+                                    </th>
+
+                                    <th data-field="DateTime">
+                                        @Localizer["time"]
+                                    </th>
+                                    <th data-field="Address">
+                                        @Localizer["building"]
+                                    </th>
+                                    <th data-field="Room">
+                                        @Localizer["room"]
+                                    </th>
+
+                                    <th data-field="Requester">
+                                        @Localizer["sender"]
+                                    </th>
+                                    <th data-field="Phone">
+                                        @Localizer["phone"]
+                                    </th>
+                                    <th data-field="comment" style="vertical-align:middle">
+                                        Коммент
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*--------------------------------
+             Tab for completed tasks history ENDED
+            -------------------------------------*@
+
+
     </div>
-</div>
 
-@section Scripts{
-    <script src="~/js/worker.js"></script>
-}
+
+
+    @*@section Scripts{
+        <script src="~/js/worker.js"></script>
+
+
+    }*@
+<script>
+    function Accept(url) {
+        swal({
+            title: "@Html.Raw(Localizer["accept?"].Value.ToString())",
+            text: "",
+            icon: "info",
+            buttons: {
+                cancel: "@Html.Raw(Localizer["no"].Value.ToString())",
+                catch: {
+                    text: "@Html.Raw(Localizer["yes"].Value.ToString())",
+                    value: "catch",
+                },
+            },
+        }).then((value) => {
+            switch (value) {
+                case "catch":
+
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+
+                        success: function (data) {
+                            if (data.success) {
+                                toastr.success(data.message);
+                                dataTable.ajax.reload();
+                            }
+                            else {
+                                toastr.error(data.message);
+                            }
+                        }
+                    });
+                    swal("@Html.Raw(Localizer["got"].Value.ToString())", "@Html.Raw(Localizer["anotherone"].Value.ToString())", "success");
+                    break;
+
+                default:
+                    swal("@Html.Raw(Localizer["cangetanother"].Value.ToString())");
+            }
+
+        });
+    }
+
+    function Deny(url) {
+        swal({
+            title: "@Html.Raw(Localizer["deny?"].Value.ToString())",
+            text: "",
+            icon: "info",
+            buttons: {
+                cancel: "@Html.Raw(Localizer["no"].Value.ToString())",
+                catch: {
+                    text: "@Html.Raw(Localizer["yesdeny"].Value.ToString())",
+                    value: "catch",
+                },
+            },
+        }).then((value) => {
+            switch (value) {
+                case "catch":
+
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+
+                        success: function (data) {
+                            if (data.success) {
+                                toastr.success(data.message);
+                                dataTable.ajax.reload();
+                            }
+                            else {
+                                toastr.error(data.message);
+                            }
+                        }
+                    });
+                    swal("@Html.Raw(Localizer["got"].Value.ToString())", "@Html.Raw(Localizer["anotherone"].Value.ToString())", "success");
+                    break;
+
+
+            }
+
+        });
+    }
+</script>
 
 

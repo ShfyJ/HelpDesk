@@ -1,9 +1,12 @@
 ﻿@model ITHelpDesk.Models.Address
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
 <div class="row">
     <div class="col">
-        <button type="submit" class="mb-2 mr-2 btn btn-primary active form-control">Create</button>
+        <button type="submit" class="mb-2 mr-2 btn btn-primary active form-control">@Localizer["create"]</button>
     </div>
     <div class="col">
-        <a asp-action="Index" class="mb-2 mr-2 btn btn-success active form-control">Back to List</a>
+        <a asp-action="Index" class="mb-2 mr-2 btn btn-success active form-control">@Localizer["exit"]</a>
     </div>
 </div>

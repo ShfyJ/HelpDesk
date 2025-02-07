@@ -19855,7 +19855,7 @@
         function (e) {
             n(157);
             e(document).ready(function () {
-                e("#calendar-list").fullCalendar({
+                e("#calendarr-list").fullCalendar({
                     header: {
                         left: "prev,next today",
                         center: "title",
@@ -19919,7 +19919,7 @@
                         url: "http://google.com/",
                         start: "2018-03-28"
                     }]
-                }), e("#calendar").fullCalendar({
+                }), e("#calendarr").fullCalendar({
                     header: {
                         left: "prev,next today",
                         center: "title",
@@ -19974,7 +19974,7 @@
                         url: "http://google.com/",
                         start: "2018-03-28"
                     }]
-                }), e("#calendar-bg-events").fullCalendar({
+                }), e("#calendarr-bg-events").fullCalendar({
                     header: {
                         left: "prev,next today",
                         center: "title",
@@ -28311,7 +28311,7 @@
             }
         },
         d = (l = {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            labels: ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul"],
             datasets: [{
                 label: "Dataset 1",
                 backgroundColor: window.chartColors.red,
@@ -28445,7 +28445,7 @@
         p = {
             type: "line",
             data: {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
+                labels: ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul"],
                 datasets: [{
                     label: "My First dataset",
                     backgroundColor: window.chartColors.red,
@@ -28508,7 +28508,7 @@
             }
         },
         f = {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            labels: ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul"],
             datasets: [{
                 label: "Dataset 1",
                 backgroundColor: o(window.chartColors.red).alpha(.5).rgbString(),

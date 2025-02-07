@@ -20,6 +20,7 @@ namespace ITHelpDesk.Models
         public string State { get; set; }
         public int? Queue { get; set; }
         public string Flag { get; set; }
+        public string FileUrl { get; set; }
 
 #nullable enable
         public string? UserId { get; set; }

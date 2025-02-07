@@ -1,4 +1,6 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
     if (ViewData.TryGetValue("ParentLayout", out var parentLayout))
     {
         Layout = (string)parentLayout;
@@ -9,11 +11,25 @@
     }
 }
 
-<h2>Manage your account</h2>
 
-<div>
-    <h4>Change your account settings</h4>
-    <hr />
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="fa fa-cog icon-gradient bg-mean-fruit"> </i>
+            </div>
+            <div>
+                @Localizer["cabinet"]
+                <div class="page-title-subheading">
+                    @Localizer["info"]
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="card-body card">
     <div class="row">
         <div class="col-md-3">
             <partial name="_ManageNav" />
@@ -23,6 +39,7 @@
         </div>
     </div>
 </div>
+
 
 @section Scripts {
     @RenderSection("Scripts", required: false)

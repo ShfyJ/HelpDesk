@@ -22,7 +22,7 @@ namespace ITHelpDesk.Controllers
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<IdentityUser> SignInManager;
         private readonly UserManager<IdentityUser> UserManager;
-
+        
         public RequestSSenderController(ApplicationDbContext context, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
         {
             _context = context;
@@ -36,9 +36,34 @@ namespace ITHelpDesk.Controllers
 
         public async Task<IActionResult> Index()
         {
-
-            var uNG_HELPDESKContext = _context.Request.Include(r => r.Address).Include(r => r.Manager).ThenInclude(u => u.User).
-                Include(r => r.Requestmaker).Include(r => r.Worker).ThenInclude(u => u.User).Where(r => r.Requestmaker.UserId == UserManager.GetUserId(User));
+            var uNG_HELPDESKContext = _context.Request.Include(t => t.Tasks).Include(r => r.Address).Include(r => r.Manager).ThenInclude(u => u.User).
+                           Include(r => r.Requestmaker).Include(r => r.Worker).ThenInclude(u => u.User).Where(r => r.Requestmaker.UserId == UserManager.GetUserId(User)).OrderByDescending(r => r.RequestId)
+                           .Select(p => new Request
+                           {
+                               RequestId = p.RequestId,
+                               RName = p.RName,
+                               RDescription = p.RDescription,
+                               RStatus = p.RStatus,
+                               RWeight = p.RWeight,
+                               RDateTime = p.RDateTime,
+                               review = p.review,
+                               Worker_Comment = p.Worker_Comment,
+                               JavascriptToRun = p.JavascriptToRun,
+                               Room = p.Room,
+                               AddressId = p.AddressId,
+                    //date = p.date,
+                               TaskId = p.TaskId,
+                               Tasks = p.Tasks,
+                               Address = p.Address,
+                               Requestmaker = p.Requestmaker,
+                               Manager = p.Manager,
+                               Worker = p.Worker,
+                               RequestmakerId = p.RequestmakerId,
+                               ManagerId = p.ManagerId,
+                               WorkerId = p.WorkerId,
+                               Completed_at = p.Completed_at,
+                               YourOrder = _context.Request.Include(w => w.Worker).ThenInclude(w => w.Request).Where(r => r.WorkerId == p.WorkerId && (DateTime.Compare(p.RDateTime.Date, r.RDateTime.Date) > 0) && (p.RStatus == "yellow" || p.RStatus == "Taken") && r.RStatus == p.RStatus).Count() + 1,
+                           });
             return View(await uNG_HELPDESKContext.ToListAsync());
         }
 
@@ -67,12 +92,29 @@ namespace ITHelpDesk.Controllers
         // GET: Requests/Create
         public IActionResult Create()
         {
-            ViewData["AddressId"] = new SelectList(_context.Address, "AddressId", "Full");
+            var AddressID = _context.User.Include(i => i.Address).ToList().FirstOrDefault(u => u.Id == UserManager.GetUserId(User)).Address.Full;
+          //  string a = _context.Address.ToList().FirstOrDefault(i => i.AddressId == AddressID).Full;
+            //ViewData["AddressId"] = new SelectList(_context.Address, "AddressId", "Full");
+            List<SelectListItem> address = new List<SelectListItem>();
+            foreach (var item in _context.Address)
+            {
+                SelectListItem sel = new SelectListItem
+                {
+                    Text = item.Full,
+                    Value = item.AddressId.ToString(),
+                    Selected = item.Full == AddressID,
+                };
+                SelectListItem s = sel;
+                address.Add(s);
+            }
+            ViewData["AddressId"] = address;
 
+            
 
             ViewData["ManagerId"] = new SelectList(_context.Managers, "ManagerId", "ManagerId");
             ViewData["RequestmakerId"] = new SelectList(_context.RequestMakers, "RequestmakerId", "RequestmakerId");
             ViewData["WorkerId"] = new SelectList(_context.Workers, "WorkerId", "WorkerId");
+            
             return View();
         }
 
@@ -86,7 +128,6 @@ namespace ITHelpDesk.Controllers
             if (ModelState.IsValid)
             {
                 var requestMakerList = _context.RequestMakers.ToList();
-
                 // var managerList = _context.Managers.ToList();
 
                 request.RequestmakerId = requestMakerList.FirstOrDefault(u => u.UserId == UserManager.GetUserId(User)).RequestmakerId;
@@ -95,11 +136,15 @@ namespace ITHelpDesk.Controllers
                 _context.Add(request);
 
                 await _context.SaveChangesAsync();
+
+
                 //request.ManagerId = managerList.FirstOrDefault(u => u.Flag == request.Address.Flag).ManagerId;
                 //_context.Add(request);
 
                 //await _context.SaveChangesAsync();
-
+               
+                
+                
                 return RedirectToAction(nameof(Index));
             }
 
@@ -107,6 +152,9 @@ namespace ITHelpDesk.Controllers
             ViewData["ManagerId"] = new SelectList(_context.Managers, "ManagerId", "ManagerId", request.ManagerId);
             ViewData["RequestmakerId"] = new SelectList(_context.RequestMakers, "RequestmakerId", "RequestmakerId", request.RequestmakerId);
             ViewData["WorkerId"] = new SelectList(_context.Workers, "WorkerId", "WorkerId", request.WorkerId);
+
+           
+
             return View(request);
         }
 
@@ -135,7 +183,7 @@ namespace ITHelpDesk.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(bool Done, int id, [Bind("RequestId,RName,RDescription,Room,RStatus,RWeight,RDateTime,RequestmakerId,AddressId,ManagerId,WorkerId")] Request request)
+        public async Task<IActionResult> Edit(bool Done, int id, [Bind("RequestId,Worker_Comment,review,RName,RDescription,Room,RStatus,RWeight,RDateTime,TaskId,RequestmakerId,AddressId,ManagerId,WorkerId")] Request request)
         {
             if (id != request.RequestId)
             {
@@ -160,9 +208,23 @@ namespace ITHelpDesk.Controllers
                         _context.Update(request);
                         await _context.SaveChangesAsync();
                     }
-                    else if (Done == false && request.WorkerId != null)
+                    else if (Done == false && request.WorkerId != null && request.Worker_Comment == null)
                     {
-                        request.RStatus = "yellow";
+                        if (request.RStatus == "Taken") {
+                            request.RStatus = "Taken";
+                        }
+                        else 
+                        {
+                            request.RStatus = "yellow";
+                        }
+                            
+                        _context.Update(request);
+                        await _context.SaveChangesAsync();
+                    }
+                    else if (Done == false && request.WorkerId != null && request.Worker_Comment != null)
+                    {
+                        
+                        request.RStatus = "Taken";
                         _context.Update(request);
                         await _context.SaveChangesAsync();
                     }

@@ -1,7 +1,8 @@
 ﻿@using ITHelpDesk.Models
 @using Microsoft.AspNetCore.Identity
 @using HelpDesk.DataAccess.Data
-
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @model dynamic
 
 @inject UserManager<IdentityUser> UserManager
@@ -18,38 +19,38 @@
 }
 
 
-    <div class="app-main__inner">
-        <div class="app-page-title">
-            <div class="page-title-wrapper">
-                <div class="page-title-heading">
-                    <div class="page-title-icon">
-                        <i class="pe-7s-menu icon-gradient bg-ripe-malin">
-                        </i>
-                    </div>
-                    <div>
-                        Employee Contacts
-                        <div class="page-title-subheading">
-                            Here you can have quick view to all employee contacts
-                        </div>
+<div class="app-main__inner">
+    <div class="app-page-title">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="page-title-icon">
+                    <i class="pe-7s-menu icon-gradient bg-ripe-malin">
+                    </i>
+                </div>
+                <div>
+                    @Localizer["title"]
+                    <div class="page-title-subheading">
+                        @Localizer["here"]
                     </div>
                 </div>
-                @*<div class="page-title-actions">
-                        <button type="button" data-toggle="tooltip" title="Example Tooltip" data-placement="bottom" class="btn-shadow mr-3 btn btn-dark">
-                            <i class="fa fa-star"></i>
-                        </button>
-
-                    </div>*@
             </div>
+            @*<div class="page-title-actions">
+                    <button type="button" data-toggle="tooltip" title="Example Tooltip" data-placement="bottom" class="btn-shadow mr-3 btn btn-dark">
+                        <i class="fa fa-star"></i>
+                    </button>
+
+                </div>*@
         </div>
-        <!-- Contact area Start-->
+    </div>
+    <!-- Contact area Start-->
 
 
-        <div class="row">
-            @foreach (Workers worker in Model.Workers)
+    <div class="row">
+        @foreach (Workers worker in Model.Workers)
+        {
+
+            if (worker.Manager.UserId.Equals(userId))
             {
-
-                if (worker.Manager.UserId.Equals(userId))
-                {
                 <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
                     <div class="contact-list">
                         <div class="contact-win">
@@ -58,7 +59,7 @@
                             </div>
                             <div class="conct-sc-ic">
 
-                                <a class="btn" href=" https://telegram.me/islom_t "><i class="fab fa-telegram-plane"></i></a>
+                                @*<a class="btn" href=" https://telegram.me/islom_t "><i class="fab fa-telegram-plane"></i></a>*@
                                 <a class="btn" href="tel:@worker.User.PhoneNumber"><i class="notika-icon notika-phone"></i></a>
 
                             </div>
@@ -68,15 +69,15 @@
                                 <h2>@worker.User.Fullname</h2>
                                 <p class="ctn-ads">@worker.User.Address.Building</p>
                             </div>
-                            <p>Here will be given info about Employee's own view about his capabilities</p>
+                            <p>@Localizer["info"]</p>
                         </div>
                         <div class="social-st-list">
                             <div class="social-sn">
-                                <h2>Rating</h2>
+                                <h2>Рейтинг</h2>
                                 <p>#</p>
                             </div>
                             <div class="social-sn">
-                                <h2>Score</h2>
+                                <h2>Балл</h2>
                                 @if (worker.Score == null)
                                 {
                                     <p>0</p>
@@ -87,17 +88,17 @@
                                 }
                             </div>
                             <div class="social-sn">
-                                <h2>Tasks</h2>
-                                <p>#</p>
+                                <h2>@Localizer["tasks"]</h2>
+                                <p>@worker.NOfWorks</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                }
             }
-        </div>
-
-        <br />
-
-        <!-- Contact area End-->
+        }
     </div>
+
+    <br />
+
+    <!-- Contact area End-->
+</div>

@@ -9,8 +9,14 @@ namespace ITHelpDesk.Models
     {
         [Key]
         public int RejectedId { get; set; }
-        public int Request { get; set; }
-        public int? Worker { get; set; }
+        [ForeignKey("RequestId")]
+        public int? RequestId { get; set; }
+        public int? WorkerId { get; set; }
+        [ForeignKey("WorkerId")]
+        public Workers Worker { get; set; }
+        public Request Request { get; set; }
 
+        [NotMapped]
+        public DateTime rDateTime { get; set; }
     }
 }

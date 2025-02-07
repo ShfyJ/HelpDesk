@@ -91,7 +91,7 @@ namespace ITHelpDesk.Areas.Identity.Pages.Account
                 if(user != null && !user.EmailConfirmed && 
                     (await _userManager.CheckPasswordAsync(user, Input.Password)))
                 {
-                    ModelState.AddModelError(string.Empty, "Email not confirmed yet");
+                    ModelState.AddModelError(string.Empty, "Почта ҳали тасдиқланманган");
                     return Page();
                 }
                 // This doesn't count login failures towards account lockout

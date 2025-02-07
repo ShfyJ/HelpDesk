@@ -28,7 +28,7 @@ namespace ITHelpDesk.Areas.Admin.Controllers
 
         public IActionResult Upsert(int? id)
         {
-            Console.WriteLine("Address id in edit:" + id);
+            
             Address address = new Address();
             if(id == null)
             {
@@ -48,11 +48,10 @@ namespace ITHelpDesk.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Upsert(Address address)
         {
-            Console.WriteLine("Address id in update:" + address.AddressId);
+            
             if (ModelState.IsValid)
             {
-                Console.WriteLine("Address id:" + address.AddressId);
-               // address.AddressId = 1;
+                
                 if (address.AddressId == 0) 
                 {                 
                     _unitOfWork.Address.Add(address);
@@ -84,11 +83,11 @@ namespace ITHelpDesk.Areas.Admin.Controllers
             var objFromDb = _unitOfWork.Address.Get(id);
             if (objFromDb == null)
             {
-                return Json(new { success = false, message = "Error while deleting" });
+                return Json(new { success = false, message = "Хатолик юз берди!" });
             }
             _unitOfWork.Address.Remove(objFromDb);
             _unitOfWork.Save();
-            return Json(new { success = true, message = "Delete Successful" });
+            return Json(new { success = true, message = "Муваффақиятли ўчирилди!" });
 
         }
         #endregion

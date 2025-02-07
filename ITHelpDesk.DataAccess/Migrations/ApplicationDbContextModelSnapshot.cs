@@ -74,13 +74,17 @@ namespace ITHelpDesk.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Request")
+                    b.Property<int?>("RequestId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Worker")
+                    b.Property<int?>("WorkerId")
                         .HasColumnType("int");
 
                     b.HasKey("RejectedId");
+
+                    b.HasIndex("RequestId");
+
+                    b.HasIndex("WorkerId");
 
                     b.ToTable("Rejecteds");
                 });
@@ -95,7 +99,7 @@ namespace ITHelpDesk.DataAccess.Migrations
                     b.Property<int?>("AddressId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Completed_at")
+                    b.Property<DateTime?>("Completed_at")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("ManagerId")
@@ -122,8 +126,17 @@ namespace ITHelpDesk.DataAccess.Migrations
                     b.Property<string>("Room")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TaskId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("WorkerId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Worker_Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("review")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("RequestId");
 
@@ -132,6 +145,8 @@ namespace ITHelpDesk.DataAccess.Migrations
                     b.HasIndex("ManagerId");
 
                     b.HasIndex("RequestmakerId");
+
+                    b.HasIndex("TaskId");
 
                     b.HasIndex("WorkerId");
 
@@ -157,12 +172,36 @@ namespace ITHelpDesk.DataAccess.Migrations
                     b.ToTable("RequestMakers");
                 });
 
+            modelBuilder.Entity("ITHelpDesk.Models.Tasks", b =>
+                {
+                    b.Property<int>("TaskId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("child")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("weight")
+                        .HasColumnType("int");
+
+                    b.HasKey("TaskId");
+
+                    b.ToTable("Tasks");
+                });
+
             modelBuilder.Entity("ITHelpDesk.Models.Workers", b =>
                 {
                     b.Property<int>("WorkerId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FileUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Flag")
                         .HasColumnType("nvarchar(max)");
@@ -405,11 +444,17 @@ namespace ITHelpDesk.DataAccess.Migrations
                     b.Property<int?>("AddressId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Department")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Position")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasIndex("AddressId");
@@ -422,6 +467,17 @@ namespace ITHelpDesk.DataAccess.Migrations
                     b.HasOne("ITHelpDesk.Models.Users", "User")
                         .WithOne("Managers")
                         .HasForeignKey("ITHelpDesk.Models.Manager", "UserId");
+                });
+
+            modelBuilder.Entity("ITHelpDesk.Models.Rejected", b =>
+                {
+                    b.HasOne("ITHelpDesk.Models.Request", "Request")
+                        .WithMany()
+                        .HasForeignKey("RequestId");
+
+                    b.HasOne("ITHelpDesk.Models.Workers", "Worker")
+                        .WithMany()
+                        .HasForeignKey("WorkerId");
                 });
 
             modelBuilder.Entity("ITHelpDesk.Models.Request", b =>
@@ -437,6 +493,10 @@ namespace ITHelpDesk.DataAccess.Migrations
                     b.HasOne("ITHelpDesk.Models.RequestMakers", "Requestmaker")
                         .WithMany("Request")
                         .HasForeignKey("RequestmakerId");
+
+                    b.HasOne("ITHelpDesk.Models.Tasks", "Tasks")
+                        .WithMany("Requests")
+                        .HasForeignKey("TaskId");
 
                     b.HasOne("ITHelpDesk.Models.Workers", "Worker")
                         .WithMany("Request")

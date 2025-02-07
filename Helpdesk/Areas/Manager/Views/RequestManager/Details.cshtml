@@ -1,72 +1,76 @@
 ﻿@model ITHelpDesk.Models.Request
-
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>@Localizer["title"]</h1>
 
-<div>
-    <h4>Request</h4>
-    <hr />
+<div class="card card-body">
+
+
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RName)
+        <dt class="col-sm-2">
+            @Localizer["rtitle"]
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RName)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RDescription)
+        <dt class="col-sm-2">
+            @Localizer["description"]
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RDescription)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RStatus)
+        <dt class="col-sm-2">
+            @Localizer["task"]
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RStatus)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Tasks.type)
+            @Html.DisplayFor(model => model.Tasks.child)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RWeight)
+
+
+        <dt class="col-sm-2">
+            @Localizer["time"]
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RWeight)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RDateTime)
-        </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RDateTime)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
+        <dt class="col-sm-2">
+            @Localizer["building"]
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Address.AddressId)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Address.Full)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Manager)
+        <dt class="col-sm-2">
+            @Localizer["room"]
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Manager.ManagerId)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Room)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Requestmaker)
+
+        <dt class="col-sm-2">
+            @Localizer["requester"]
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Requestmaker.RequestmakerId)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Requestmaker.User.Fullname)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Worker)
+        <dt class="col-sm-2">
+            @Localizer["department"]
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Worker.WorkerId)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Requestmaker.User.Department)
+        </dd>
+        <dt class="col-sm-2">
+            @Localizer["position"]
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Requestmaker.User.Position)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.RequestId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn notika-btn-cyan waves-effect text-white" style="margin-top:5px">@Localizer["back"]</a>
 </div>

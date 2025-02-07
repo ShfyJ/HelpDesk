@@ -70,26 +70,29 @@
                     <div class="input-group">
                         <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-support"></i></span>
                         <div class="nk-int-st">
-                            <input asp-for="Input.Email" placeholder="Email..." type="email" class="mb-1 form-control" />
+                            <input asp-for="Input.Email" placeholder="Почта манзили.." type="email" class="mb-1 form-control" />
                         </div>
                     </div>
                     <div class="input-group mg-t-15">
                         <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-edit"></i></span>
                         <div class="nk-int-st">
-                            <input asp-for="Input.Password" placeholder="Password..." type="password" class="form-control" />
+                            <input asp-for="Input.Password" placeholder="Парол.." type="password" class="form-control" />
                         </div>
                     </div>
                     <div class="fm-checkbox">
-                        <label><input type="checkbox" class="i-checks"> <i></i> Keep me signed in</label>
+                        <label><input type="checkbox" class="i-checks"> <i></i> Логинда қолиш</label>
                     </div>
+                    <a style="float:right;" href="https://www.youtube.com/watch?v=QxMJy4ndndw&feature=youtu.be">
+                        Видео урок / Видео қўлланма
+                    </a>
                     <div asp-validation-summary="All" class="text-danger"></div>
-                    <button type="submit"   class="btn btn-login btn-success btn-float btn btn-primary waves-effect" data-toggle="tooltip" data-placement="right" title="" data-original-title="Login"><i class="notika-icon notika-right-arrow right-arrow-ant"></i></button>
+                    <button type="submit" class="btn btn-login btn-success btn-float btn btn-primary waves-effect" data-toggle="tooltip" data-placement="right" title="" data-original-title="Кириш"><i class="notika-icon notika-right-arrow right-arrow-ant"></i></button>
                 </div>
 
                 <div class="nk-navigation nk-lg-ic">
-                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl"  data-ma-block="#l-register"><i class="notika-icon notika-plus-symbol"></i> <span>Register</span></a>
-                    <a id="forgot-password" asp-page="./ForgotPassword" data-ma-action="nk-login-switch" data-ma-block="#l-forget-password"><i>?</i> <span>Forgot Password</span></a>
-                    <a id="resend-email" type="submit" asp-page-handler="SendVerificationEmail" data-ma-action="nk-login-switch" data-ma-block="#l-resend-email"><i class="notika-icon notika-mail"></i><span>Resend email confirmation</span></a>
+                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl"  data-ma-block="#l-register"><i class="notika-icon notika-plus-symbol"></i> <span>Рўйхатдан ўтиш</span></a>
+                    <a id="forgot-password" asp-page="./ForgotPassword" data-ma-action="nk-login-switch" data-ma-block="#l-forget-password"><i>?</i> <span>Паролни унутдим</span></a>
+                    <a id="resend-email" type="submit" asp-page-handler="SendVerificationEmail" data-ma-action="nk-login-switch" data-ma-block="#l-resend-email"><i class="notika-icon notika-mail"></i><span>Почта тасдиқни қайта юбориш</span></a>
                 </div>
             </form>
         </div>

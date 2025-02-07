@@ -1,119 +1,213 @@
 ﻿@model ITHelpDesk.Models.Request
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
-@{
-    ViewData["Title"] = "Edit";
-}
+    @{
+        ViewData["Title"] = "Изоҳ юбориш";
+        var number = string.Concat("A", Model.RequestId.ToString());
+    }
 
-<h1>Edit</h1>
+    <div class="app-page-title">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="page-title-icon">
+                    <i class="pe-7s-menu icon-gradient bg-ripe-malin">
+                    </i>
+                </div>
+                <div>
+                    @Localizer["title"]
+                    @*<div class="page-title-subheading">
+            ---
+        </div>*@
+                </div>
+            </div>
+            @*<div class="page-title-actions">
+                    <button type="button" data-toggle="tooltip" title="Example Tooltip" data-placement="bottom" class="btn-shadow mr-3 btn btn-dark">
+                        <i class="fa fa-star"></i>
+                    </button>
 
-<h4>Request: </h4>
-<hr />
+                </div>*@
+        </div>
+    </div>
 
+    <div class="main-card mb-3 card">
+        <div class="card-body">
+            <h5 class="card-title">@number @Localizer["number"]</h5>
+            <form asp-action="Edit">
 
-<form asp-action="Edit">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Title
-                </th>
-                <th>
-                    Description
-                </th>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="RequestId" />
 
-                <th>
-                    Address
-                </th>
-                <th>
-                    Room
-                </th>
-                <th>
-                    Done
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="RequestId" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="RequestmakerId" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ManagerId" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="WorkerId" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="RWeight" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="RStatus" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="RDateTime" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Worker_Comment" />
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="RequestmakerId" />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ManagerId" />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="WorkerId" />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="RWeight" />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="RStatus" />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="RDateTime" />
-            <tr>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="TaskId" />
 
-                <td>
-                    <div class="form-group">
+                @if (Model.RStatus == "blue" || Model.RStatus == "yellow")
+                {
+                    <div class="position-relative form-group">
+                        <label for="RName" class="">@Localizer["rtitle"]</label>
                         <input asp-for="RName" class="form-control" />
                         <span asp-validation-for="RName" class="text-danger"></span>
-
+                    </div>
+                    <div class="position-relative form-group">
+                        <label for="examplePassword" class="">@Localizer["description"]</label>
+                        <textarea asp-for="RDescription" class="form-control"></textarea>
+                        <span asp-validation-for="RDescription" class="text-danger"></span>
                     </div>
 
-                </td>
-                <td>
-                    <input asp-for="RDescription" class="form-control" />
-                    <span asp-validation-for="RDescription" class="text-danger"></span>
-                </td>
-
-
-
-                <td>
-                    <div class="form-group">
+                    <div class="position-relative form-group">
+                        <label for="exampleSelect" class="">@Localizer["address"]</label>
                         <select asp-for="AddressId" class="form-control" asp-items="ViewBag.AddressId"></select>
                         <span asp-validation-for="AddressId" class="text-danger"></span>
+
+                    </div>
+                    <div class="position-relative form-group">
+                        <label for="exampleSelect" class="">@Localizer["room"]</label>
+                        <input asp-for="Room" class="form-control" />
+                        <span asp-validation-for="Room" class="text-danger"></span>
+
+                    </div>
+                }
+                else
+                {
+
+                    <div class="position-relative form-group">
+                        <label for="RName" class="">@Localizer["rtitle"]</label>
+                        <input asp-for="RName" class="form-control" readonly />
+                        <span asp-validation-for="RName" class="text-danger"></span>
+                    </div>
+                    <div class="position-relative form-group">
+                        <label for="examplePassword" class="">@Localizer["description"]</label>
+                        <textarea asp-for="RDescription" class="form-control" readonly></textarea>
+                        <span asp-validation-for="RDescription" class="text-danger"></span>
                     </div>
 
-                </td>
-                <td>
-                    <input asp-for="Room" class="form-control" />
-                    <span asp-validation-for="Room" class="text-danger"></span>
-                </td>
+                    @*<div class="position-relative form-group">
+                            <label for="exampleSelect" class="">@Localizer["address"]</label>
+                            <textarea asp-for="AddressId" class="form-control" readonly></textarea>
+                            <span asp-validation-for="AddressId" class="text-danger"></span>
 
-                <td>
-                    @if (Model.RStatus.ToLower() == "blue")
+            <input type="hidden" asp-for="AddressId" />
+                        </div>*@
+                    <input type="hidden" asp-for="AddressId" />
+
+                    <div class="position-relative form-group">
+                        <label for="exampleSelect" class="">@Localizer["room"]</label>
+                        <input asp-for="Room" class="form-control" readonly />
+                        <span asp-validation-for="Room" class="text-danger"></span>
+
+                    </div>
+
+                }
+                <div class="position-relative form-group">
+                    @if (Model.RStatus == "Taken")
                     {
-
+                        <div class="toggle-select-act fm-cmp-mg">
+                            <div class="nk-toggle-switch">
+                                <label for="ts1" class="ts-label">@Localizer["close"]</label>
+                                <input id="ts1" type="checkbox" hidden="hidden" name="Done" value="true">
+                                <label for="ts1" class="ts-helper"></label>
+                            </div>
+                        </div>
+                    }
+                    else if (Model.RStatus == "green")
+                    {
+                        <div class="toggle-select-act fm-cmp-mg">
+                            <div class="nk-toggle-switch  ">
+                                <label for="ts1" class="ts-label">@Localizer["closed"]</label>
+                                <input type="hidden" name="Done" value="true">
+                                <label for="ts1" class="ts-helper" style=" background: #22deb0;"></label>
+                            </div>
+                        </div>
                     }
                     else
                     {
-                        @if (Model.RStatus == "green")
-                        {
-                            @Html.CheckBox("Done", true)
-
-                        }
-                        else
-                        {
-                            @Html.CheckBox("Done", false)
-                        }
+                        <div class="toggle-select-act sm-res-mg-t-10">
+                            <div class="nk-toggle-switch disabled">
+                                <label for="tsd" class="ts-label">@Localizer["notclosed"]</label>
+                                <input id="tsd" type="checkbox" hidden="hidden" checked="checked" disabled="disabled" name="Done">
+                                <label for="tsd" class="ts-helper"></label>
+                            </div>
+                        </div>
                     }
-                </td>
-                <td>
-                    <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-primary" />
+
+
+                </div>
+
+                @*<td>
+            @if (Model.RStatus.ToLower() == "blue" || Model.RStatus.ToLower() == "yellow")
+            {
+
+            }
+            else
+            {
+                @if (Model.RStatus == "green")
+                {
+                    @Html.CheckBox("Done", true)
+
+                }
+                else
+                {
+                    @Html.CheckBox("Done", false)
+                }
+            }
+        </td>*@
+
+                <div class="col-lg-10 position-relative form-group">
+
+                    <div class="form-group ic-cmp-int form-elet-mg">
+                        <div class="form-ic-cmp">
+                            <i class="notika-icon notika-edit"></i>
+                        </div>
+                        <div class="nk-int-st">
+                            <textarea type="text" class="form-control" asp-for="review" placeholder="@Localizer["comment"]" rows="3"></textarea>
+                            <span asp-validation-for="review" class="text-danger"></span>
+                        </div>
+
                     </div>
-                </td>
+                </div>
 
+                <div class="form-group">
+                    <button type="submit" class="mt-1 btn notika-btn-cyan text-white">@Localizer["send"]</button>
+                </div>
 
+                <div class="col-lg-10" style="display:none;">
 
-            </tr>
-        </tbody>
-    </table>
-</form>
+                    <div class="form-group ic-cmp-int form-elet-mg">
+                        <div class="form-ic-cmp">
+                            <i class="notika-icon notika-edit"></i>
+                        </div>
+                        <div class="nk-int-st">
+                            <textarea type="text" class="form-control" asp-for="Worker_Comment" placeholder="@Localizer["can"]" rows="3"></textarea>
+                            <span asp-validation-for="Worker_Comment" class="text-danger"></span>
+                        </div>
 
+                    </div>
+                </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+            </form>
+        </div>
+    </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    <br />
+    <div>
+        <a asp-action="Index">@Localizer["back"]</a>
+    </div>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

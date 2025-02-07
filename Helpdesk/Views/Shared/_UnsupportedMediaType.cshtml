@@ -1,0 +1,84 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{ Layout = null;}
+
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>415 Helpdesk</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- favicon
+        ============================================ -->
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+    <!-- Google Fonts
+        ============================================ -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
+    <!-- Bootstrap CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/bootstrap.min.css">
+    <!-- font awesome CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/font-awesome.min.css">
+
+    <!-- animate CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/animate.css">
+
+    <!-- Notika icon CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/notika-custom-icon.css">
+    <!-- main CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/main.css">
+    <!-- style CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/style.css">
+    <!-- responsive CSS
+        ============================================ -->
+    <link rel="stylesheet" href="~/register/css/responsive.css">
+
+</head>
+
+<body>
+    <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <!-- 404 Page area Start-->
+    <div class="error-page-area">
+        <div class="error-page-wrap">
+            <i class="notika-icon notika-close" style="color:#00BCD4"></i>
+            <h2>@Localizer["error"] <span class="counter" style="color:#00BCD4">415</span></h2>
+            <p>
+                @Localizer["sorry"]
+            </p>
+            <a asp-action="Contacts" class="btn" style="background-color:#00BCD4">@Localizer["exit"]</a>
+            <a asp-controller="Requests" asp-action="Dashboard" class="btn error-btn-mg" style="background-color:#00BCD4">@Localizer["main"]</a>
+        </div>
+    </div>
+    <!-- 404 Page area End-->
+    <!-- jquery
+        ============================================ -->
+    <script src="~/register/js/vendor/jquery-1.12.4.min.js"></script>
+    <!-- bootstrap JS
+        ============================================ -->
+    <script src="~/register/js/bootstrap.min.js"></script>
+    <!-- wow JS
+        ============================================ -->
+    <script src="~/register/js/wow.min.js"></script>
+
+    <!-- counterup JS
+        ============================================ -->
+    <script src="~/register/js/counterup/jquery.counterup.min.js"></script>
+    <script src="~/register/js/counterup/waypoints.min.js"></script>
+    <script src="~/register/js/counterup/counterup-active.js"></script>
+
+    <!-- main JS
+        ============================================ -->
+    <script src="~/register/js/main.js"></script>
+</body>
+
+</html>

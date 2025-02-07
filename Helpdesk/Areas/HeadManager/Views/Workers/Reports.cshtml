@@ -1,0 +1,237 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="//resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<script>
+
+    $(function () {
+        $("#start").ready(function () {
+            $("input:text, form").attr("autocomplete", "off");
+        })
+        $("#start").datepicker({
+            altFormat: "yy-mm-dd",
+            dateFormat: "yy-mm-dd",
+            changeMonth: true,
+            changeYear: true
+        });
+
+    });
+</script>
+<script>
+    $(function () {
+        $("#end").datepicker({
+            altFormat: "yy-mm-dd",
+            dateFormat: "yy-mm-dd",
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+</script>
+@*<div>
+        <p>
+            @using (Html.BeginForm("WorkersScoreParameters", "Workers", new { area = "HeadManager" }, FormMethod.Post))
+            {
+                <div class="container">
+
+                    <div class="row">
+                        <div class="col-lg-3" id="datapicker">
+                            <label>Бошланғич сана:</label>  @Html.TextBox("start")
+                        </div>
+
+                        <div class="col-lg-3" id="datapicker" autocomplete="off">
+                            <label>Тугаш сана:</label>   @Html.TextBox("end")
+                        </div>
+
+                        <div class="col-lg-3">
+                            <br />
+                            <div class="breadcomb-report">
+
+                                <button class="btn waves-effect" onclick="downloadExcel()" type="submit">
+                                    <i class="notika-icon notika-sent far fa-file-excel"></i>
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            }
+
+        </p>
+
+        <br />
+    </div>*@
+
+
+<div class="main-card mb-3 card">
+    <div class="card-body">
+        <div id="calendar" class="fc fc-bootstrap4 fc-ltr"></div>
+    </div>
+</div>
+
+@using (Html.BeginForm("WorkersScoreParameters", "Workers", new { area = "HeadManager" }, FormMethod.Post))
+{
+
+    <div class="main-card mb-3 card" style=" position: relative; margin-right: 40px; margin-left: 40px;">
+
+        <div class="card-body">
+
+            <div class="row text-center">
+
+                <div class="col-md-2 text-left">
+                    <div class="form-group">
+                        <div class="breadcomb-wp">
+                            <div class="breadcomb-icon">
+                                <i class="fa fa-download icon-gradient bg-malibu-beach"> </i>
+                            </div>
+                            <div class="breadcomb-ctn">
+                                <h2>@Localizer["excel"]</h2>
+                                <p>@Localizer["time"]</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class='col-md-4'>
+                    <div class="form-group" style=" position: relative; margin-right: 20px; margin-left: 20px;">
+                        <div class='input-group date' id='datapicker'>
+                            <div style="display: block;">
+                                @*<label for="start" style="display:block;">Бошланғич сана: </label>*@
+                                <input type='text' name="start" id="start" class="form-control" placeholder="@Localizer["start"]" />
+
+
+                            </div>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-md-4'>
+                    <div class="form-group" style=" position: relative; margin-right: 20px; margin-left: 20px;">
+                        <div class='input-group date' id='datapicker'>
+                            <div style="display: block;">
+                                @*<label for="end">Тугаш сана: </label>*@
+                                <input type='text' id="end" name="end" class="form-control" placeholder="@Localizer["end"]" />
+
+                            </div>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-1 ">
+                    <div class="form-group text-center">
+                        <button class="mb-2 mr-2 btn notika-btn-cyan" style="position:relative; color:white; " onclick="downloadExcel()" type="submit">
+                            <i class="fa fa-fw" aria-hidden="true" title="Copy to use file-excel-o"> </i>@Localizer["excel"]
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+}
+
+<script>
+    $(function () {
+        $("#datepicker").datepicker();
+    });
+</script>
+
+
+
+
+
+
+@section Scripts {
+    <partial name="_ModalViewInCalendar" />
+
+}
+<script>
+    $(document).ready(function () {
+        var events = [];
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "/HeadManager/Workers/GetEvents",
+            traditional: true,
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+
+                $.each(data, function (i, v) {
+                    events.push({
+                        title: v.rName,
+                        description: v.rDescription,
+                        worker: v.worker != null ? v.worker.user.fName : "Ҳали ҳеч ким бириктирилмаган",
+                        start: moment(v.rDateTime),
+                        end: v.completed_at != null ? moment(v.completed_at) : null,
+                        color: v.rStatus,
+                        allDay: false,
+
+                    });
+                })
+                GenerateCalendar(events);
+            },
+            error: function (error) {
+                alert('Хатолик юз берди');
+            }
+        })
+
+
+        function GenerateCalendar(events) {
+            $('#calendar').fullCalendar('destroy');
+            $('#calendar').fullCalendar({
+
+                monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+                monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+                dayNames: ['@Html.Raw(Localizer["monday"].Value.ToString())', '@Html.Raw(Localizer["tuesday"].Value.ToString())', '@Html.Raw(Localizer["wendesday"].Value.ToString())', '@Html.Raw(Localizer["thursday"].Value.ToString())', '@Html.Raw(Localizer["friday"].Value.ToString())', '@Html.Raw(Localizer["saturday"].Value.ToString())', '@Html.Raw(Localizer["sunday"].Value.ToString())'],
+                dayNamesShort: ['@Html.Raw(Localizer["mon"].Value.ToString())', '@Html.Raw(Localizer["tue"].Value.ToString())', '@Html.Raw(Localizer["wen"].Value.ToString())', '@Html.Raw(Localizer["thur"].Value.ToString())', '@Html.Raw(Localizer["fri"].Value.ToString())', '@Html.Raw(Localizer["sat"].Value.ToString())', '@Html.Raw(Localizer["sun"].Value.ToString())'],
+                buttonText: {
+                    today: '@Html.Raw(Localizer["today"].Value.ToString())',
+                    month: '@Html.Raw(Localizer["month"].Value.ToString())',
+                    week: '@Html.Raw(Localizer["week"].Value.ToString())',
+                    day: '@Html.Raw(Localizer["day"].Value.ToString())',
+
+                },
+                contentHeight: 400,
+                defaultDate: new Date(),
+                timeFormat: 'h(:mm)a',
+                header: {
+                    left: 'prev, next today',
+                    center: 'title',
+                    right: 'month, basicWeek, basicDay'
+                },
+                eventLimit: true,
+                eventColor: '#378006',
+                events: events,
+                eventClick: function (calEvent, jsEvent, view) {
+                    $('#myModal #eventTitle').text(calEvent.title);
+                    var $description = $('<div/>');
+                    $description.append($('<p/>').html('<b>Келган: <b/>' + calEvent.start.format("LLL")));
+                    if (calEvent.end != null) {
+                        $description.append($('<p/>').html('<b>Тугатилган: <b/>' + calEvent.end.format("LLL")));
+                    }
+                    $description.append($('<p/>').html('<b>Мазмун: <b/>' + calEvent.description));
+                    $description.append($('<p/>').html('<b>Жавобпар шахс: <b/>' + calEvent.worker));
+                    $('#myModal #pDetails').empty().html($description);
+                    $('#myModal').modal();
+                }
+            })
+        }
+    })
+</script>

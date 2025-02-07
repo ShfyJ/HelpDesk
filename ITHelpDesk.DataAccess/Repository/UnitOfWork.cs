@@ -20,6 +20,8 @@ namespace ITHelpDesk.DataAccess.Repository
             Address = new AddressRepository(_db);
             Manager = new ManagerRepository(_db);
             Requester = new RequesterRepository(_db);
+            Request = new RequestRepository(_db);
+            Rejected = new RejectedRepository(_db);
         }
 
         public ISP_Call SP_Call { get; private set; }
@@ -31,6 +33,10 @@ namespace ITHelpDesk.DataAccess.Repository
         public IAddressRepository Address { get; private set; }
         public IManagerRepository Manager { get; private set; }
         public IRequesterRepository Requester { get; private set; }
+
+        public IRequestRepository Request { get; private set; }
+
+        public IRejectedRepository Rejected { get; private set; }
 
         public void Dispose()
         {

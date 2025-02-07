@@ -17,6 +17,17 @@ using ITHelpDesk.DataAccess.Repository.IRepository;
 using ITHelpDesk.DataAccess.Repository;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using ITHelpDesk.Utility;
+using ITHelpDesk.Models;
+
+using AutoMapper;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.IO;
+using Microsoft.Extensions.FileProviders;
+using System.Globalization;
+using Microsoft.Extensions.Localization;
+using Microsoft.AspNetCore.Localization;
+using System.Text.Json.Serialization;
 
 namespace HelpDesk
 {
@@ -32,6 +43,10 @@ namespace HelpDesk
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Localization
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddControllersWithViews().AddViewLocalization();
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -46,8 +61,14 @@ namespace HelpDesk
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             Global.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddScoped<ITHelpDesk.DataAccess.Repository.IRequest, IRequestService>();
-
+            services.AddScoped<IRequest, IRequestService>();
+            services.AddScoped<ITHelpDesk.DataAccess.Repository.IPythonBot, PythonBotService>();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+            services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
             services.AddControllersWithViews();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
@@ -58,11 +79,40 @@ namespace HelpDesk
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
 
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+
+            services.AddAuthentication().AddCookie(cfg => cfg.SlidingExpiration = true)
+               .AddJwtBearer(cfg =>
+               {
+                   cfg.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                   {
+                       ValidIssuer = JWT.Issuer,
+                       ValidAudience = JWT.Audience,
+                       IssuerSigningKey =
+                       new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT.Key))
+                   };
+               });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //Localiz
+            var supportedCultures = new[]
+            {
+                new CultureInfo("uz"),
+                new CultureInfo("ru"),
+            };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("uz"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures,
+            });
+            // Local
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

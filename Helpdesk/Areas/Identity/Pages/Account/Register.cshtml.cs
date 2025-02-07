@@ -33,7 +33,7 @@ namespace ITHelpDesk.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUnitOfWork _unitOfwork;
-       // private readonly WorkerManager<Workers> workerManager;
+        // private readonly WorkerManager<Workers> workerManager;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -50,9 +50,10 @@ namespace ITHelpDesk.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             _roleManager = roleManager;
             _unitOfwork = unitOfwork;
-            _db=db;
+            _db = db;
         }
-
+        [BindProperty]
+        public string Message1 { get; set; }
         [BindProperty]
         public InputModel Input { get; set; }
 
@@ -63,24 +64,25 @@ namespace ITHelpDesk.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [RegularExpression("^[a-zA-Z0-9]{3,20}@ung.uz$", ErrorMessage = "Неправильно указан электронный адрес!")]
+            [RegularExpression("^[a-zA-Z0-9]+[.]?[a-z0-9]{3,20}@ung.uz$", ErrorMessage = "Электрон почта нотўғри кўрсатилган!")]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(15, ErrorMessage = "{0} камида {2} ва кўпи билан {1} хонадан ташкил топиши керак!", MinimumLength = 6)]
+            [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{6,15}$", ErrorMessage = "Парол камида битта бош ҳарф, кичик ҳарф, рақам ва символдан ташкил топиши керак!")]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Парол")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Compare("Password", ErrorMessage = "Парол тасдиқланмади, қайтадан киритинг!")]
             public string ConfirmPassword { get; set; }
 
             [Required]
-            [RegularExpression("^[9,7][0-9]{8}$", ErrorMessage = "Неправильно указан номер телефона!")]
+            [RegularExpression("^[9,7,3][0-9]{8}$", ErrorMessage = "Тел. рақами нотўғри кўрсатилган!")]
             [DataType(DataType.PhoneNumber)]
             [Display(Name = "PhoneNumber")]
             public string PhoneNumber { get; set; }
@@ -93,8 +95,20 @@ namespace ITHelpDesk.Areas.Identity.Pages.Account
 
             [Required]
             public string FName { get; set; }
+
+            [Required]
+            public string Department { get; set; }
+
+            [Required]
+            public string Position { get; set; }
+
+            [Required]
             public string LName { get; set; }
+
+            [Required]
             public int AddressId { get; set; }
+
+
             public string Role { get; set; }
             public string ManagerId { get; set; }
 
@@ -114,7 +128,7 @@ namespace ITHelpDesk.Areas.Identity.Pages.Account
             {
                 var roleId = userRole.FirstOrDefault(u => u.UserId == user.Id).RoleId;
                 user.Role = roles.FirstOrDefault(u => u.Id == roleId).Name;
-               
+
             }
 
 
@@ -122,12 +136,7 @@ namespace ITHelpDesk.Areas.Identity.Pages.Account
             {
                 BuildingList = _unitOfwork.Address.GetAll().Select(i => new SelectListItem
                 {
-                    Text = i.Building,
-                    Value = i.AddressId.ToString()
-                }),
-                BlockList = _unitOfwork.Address.GetAll().Select(i => new SelectListItem
-                {
-                    Text = i.Block,
+                    Text = i.Full,
                     Value = i.AddressId.ToString()
                 }),
                 RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem
@@ -142,21 +151,28 @@ namespace ITHelpDesk.Areas.Identity.Pages.Account
                     Text = i.Fullname,
                     Value = i.Id.ToString()
                 }),
-               
+
 
             };
-            
+
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            
+            var userList = _db.User.ToList();
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            foreach(var item in userList) {
+                if (item.Email == Input.Email)
+                {
+                    Message1 = "Электрон почта мавжуд";
+                }
+            }
             if (ModelState.IsValid)
             {
+
                 var user = new Users
                 {
                     UserName = Input.Email,
@@ -165,7 +181,10 @@ namespace ITHelpDesk.Areas.Identity.Pages.Account
                     FName = Input.FName,
                     LName = Input.LName,
                     PhoneNumber = Input.PhoneNumber,
-                    Role = Input.Role
+                    Role = Input.Role,
+                    Department = Input.Department,
+                    Position = Input.Position,
+                    EmailConfirmed = true
                 };
 
                 var manager = new Manager
@@ -182,16 +201,18 @@ namespace ITHelpDesk.Areas.Identity.Pages.Account
                     UserId = user.Id
                 };
                 var worker = new Workers();
-                if (user.Role != null) { 
+                if (user.Role != null && user.Role == SD.Role_Employee)
+                {
                     var managers = _db.Managers.ToList();
                     var managerId = managers.FirstOrDefault(u => u.UserId == Input.ManagerId).ManagerId;
                     worker.UserId = user.Id;
                     worker.ManagerId = managerId;
                     worker.State = "working";
-                                  
+
                 }
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                
+
                 if (result.Succeeded)
                 {
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -203,7 +224,7 @@ namespace ITHelpDesk.Areas.Identity.Pages.Account
 
                     _logger.LogInformation("User created a new account with password.");
 
-                    if(!await _roleManager.RoleExistsAsync(SD.Role_Admin))
+                    if (!await _roleManager.RoleExistsAsync(SD.Role_Admin))
                     {
                         await _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin));
                     }
@@ -214,7 +235,7 @@ namespace ITHelpDesk.Areas.Identity.Pages.Account
                     if (!await _roleManager.RoleExistsAsync(SD.Role_Manager))
                     {
                         await _roleManager.CreateAsync(new IdentityRole(SD.Role_Manager));
-                        
+
                     }
                     if (!await _roleManager.RoleExistsAsync(SD.Role_Employee))
                     {
@@ -297,6 +318,26 @@ namespace ITHelpDesk.Areas.Identity.Pages.Account
             }
 
             // If we got this far, something failed, redisplay form
+            Input = new InputModel()
+            {
+                BuildingList = _unitOfwork.Address.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Full,
+                    Value = i.AddressId.ToString()
+                }),
+                RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem
+                {
+                    Text = i,
+                    Value = i,
+                    Selected = false
+                }),
+
+                ManagerList = userList.Where(u => u.Role == "Manager").Select(i => new SelectListItem
+                {
+                    Text = i.Fullname,
+                    Value = i.Id.ToString()
+                }),
+            };
             return Page();
         }
     }

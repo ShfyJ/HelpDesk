@@ -1,0 +1,182 @@
+﻿@model ITHelpDesk.Models.Request
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = "Edit";
+}
+
+
+@{ var number = string.Concat("A", Model.RequestId.ToString()); }
+
+
+
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-menu icon-gradient bg-ripe-malin">
+                </i>
+            </div>
+            <div>
+                @Localizer["title"]
+                @*<div class="page-title-subheading">
+                        ---
+                    </div>*@
+            </div>
+        </div>
+        @*<div class="page-title-actions">
+                <button type="button" data-toggle="tooltip" title="Example Tooltip" data-placement="bottom" class="btn-shadow mr-3 btn btn-dark">
+                    <i class="fa fa-star"></i>
+                </button>
+
+            </div>*@
+    </div>
+</div>
+
+
+<div class="main-card mb-3 card">
+    <div class="card-body">
+        <h5 class="card-title">@number @Localizer["number"]</h5>
+        <form asp-action="Edit">
+
+            <input type="hidden" asp-for="RequestId" />
+            <input type="hidden" asp-for="RequestmakerId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ManagerId" />
+            
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RWeight" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RStatus" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RDateTime" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Room" />
+
+
+
+            <div class="position-relative form-group">
+                <label for="exampleEmail" class="">@Localizer["rtitle"]</label>
+                <input asp-for="RName" placeholder=@Html.DisplayFor(modelItem => modelItem.RName) class="form-control" readonly>
+            </div>
+            <div class="position-relative form-group">
+                <label for="examplePassword" class="">@Localizer["description"]</label>
+                <textarea asp-for="RDescription" placeholder=@Html.DisplayFor(modelItem => modelItem.RDescription) class="form-control" readonly></textarea>
+            </div>
+            @*<div class="position-relative form-group">
+                    <label for="exampleSelect" class="">Юборилган манзил</label>
+                    <select asp-for="AddressId" class="form-control" asp-items="ViewBag.AddressId"></select>
+                    <span asp-validation-for="AddressId" class="text-danger"></span>
+
+                </div>*@
+            <div class="form-group">
+                <label for="exampleSelect" class="">@Localizer["address"]</label>
+                <div class="chosen-select-act">
+
+                    <select asp-for="AddressId" class="chosen-select-width" tabindex="5" asp-items="ViewBag.AddressId"></select>
+                    <span asp-validation-for="AddressId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="exampleSelect" class="">@Localizer["worker"]</label>
+                <div class="chosen-select-act">
+
+                    <select asp-for="WorkerId" class="chosen-select-width" tabindex="5" asp-items="ViewBag.WorkerId"></select>
+                    <span asp-validation-for="WorkerId" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                @if (Model.RStatus.ToLower() == "green")
+                {
+                    <label for="exampleSelect" class="">@Localizer["type"]</label>
+                    <div class="chosen-select-act">
+                        <select asp-for="TaskId" class="chosen-select-width" tabindex="5" asp-items="ViewBag.TaskId"></select>
+
+                        <span asp-validation-for="TaskId" class="text-danger"></span>
+                    </div>
+
+
+                }
+                else if (Model.RStatus.ToLower() == "taken")
+                {
+                    <div class="toggle-select-act fm-cmp-mg">
+                        <div class="nk-toggle-switch">
+                            <label for="ts1" class="ts-label">@Localizer["close"]</label>
+                            <input id="ts1" type="checkbox" hidden="hidden" name="Done" value="true">
+                            <label for="ts1" class="ts-helper"></label>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                }
+            </div>
+
+            <div class="col-lg-10 position-relative form-group" style="display:none">
+
+                <div class="form-group ic-cmp-int form-elet-mg">
+                    <div class="form-ic-cmp">
+                        <i class="notika-icon notika-edit"></i>
+                    </div>
+                    <div class="nk-int-st">
+                        <textarea type="text" class="form-control" asp-for="Worker_Comment" placeholder="@Localizer["comment"]" rows="3" readonly></textarea>
+                        <span asp-validation-for="Worker_Comment" class="text-danger"></span>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="col-lg-10">
+
+                <div class="form-group ic-cmp-int form-elet-mg" style="display:none">
+                    <div class="form-ic-cmp">
+                        <i class="notika-icon notika-edit"></i>
+                    </div>
+                    <div class="nk-int-st">
+                        <textarea type="text" class="form-control" asp-for="review" placeholder="Izoh qoldiring" rows="3" readonly></textarea>
+                        <span asp-validation-for="review" class="text-danger"></span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                @Localizer["requester"]:
+                @Model.review
+
+            </div>
+            <div class="form-group">
+                @Localizer["worker"]:
+                @Model.Worker_Comment
+
+            </div>
+
+
+            <button type="submit" class="mt-1 btn btn-primary">@Localizer["give"]</button>
+        </form>
+    </div>
+</div>
+
+
+
+
+<div>
+    <a asp-action="Index">@Localizer["back"]</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+
+
+}
+
+
+
+
+
+
+

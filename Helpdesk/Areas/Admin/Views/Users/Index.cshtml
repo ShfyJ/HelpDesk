@@ -3,71 +3,73 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <div class="app-page-title">
-        <div class="page-title-wrapper">
-            <div class="page-title-heading">
-                <div class="page-title-icon font-icon-wrapper font-icon-lg">
-                    <i class="pe-7s-menu icon-gradient bg-ripe-malin">
-                    </i>
-                </div>
-                <div>
-                    <h2 class="text-info">User List</h2>
-                    <div class="page-title-subheading">
-                        Here you can get information, lock and unlock users
-                    </div>
-                </div>
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon font-icon-wrapper font-icon-lg">
+                <i class="pe-7s-menu icon-gradient bg-ripe-malin">
+                </i>
             </div>
-            <div class="page-title-actions">
-                <a class="mb-2 mr-2 btn-transition btn btn-outline-info" asp-area="Identity" asp-page="/Account/Register">
-                    <i class="fas fa-plus"></i>
-                    &nbsp; Create New User
-                </a>
+            <div>
+                <h2 class="text-info">Фойдаланувчилар рўйхати</h2>
+                <div class="page-title-subheading">
+                    Бу ерда фойдаланувчиларни бошқариш мумкин
+                </div>
             </div>
         </div>
+        <div class="page-title-actions">
+            <a class="mb-2 mr-2 btn-transition btn btn-outline-info" asp-area="Identity" asp-page="/Account/Register">
+                <i class="fas fa-plus"></i>
+                &nbsp; Фойдаланувчи Қўшиш
+            </a>
+        </div>
     </div>
+</div>
 
 <div class="data-table-area">
     <div class="main-card mb-3 card">
         <div class="card-body">
-            
-                
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="data-table-list">
 
-                        <div class="basic-tb-hd">
-                            
-                            <div class="row">
-                                <div class="col-6 float-right">
 
-                                    
-                                </div>
-                            
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="data-table-list">
 
-                        <div class="table-responsive">
-                            <table id="data-table-basic" class="table" cellspacing="0" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th>FName</th>
-                                        <th>LName</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        @*<th>Address</th>*@
-                                        <th>Role</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th>FName</th>
-                                        <th>LName</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        @*<th>Address</th>*@
-                                        <th>Role</th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                    <div class="basic-tb-hd">
+
+                        <div class="row">
+                            <div class="col-6 float-right">
+
+
+                            </div>
+
+
+                            <div class="table-responsive">
+                                <table id="data-table-basic" class="table" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:10px">Исми</th>
+                                            <th>Фамилияси</th>
+                                            <th>Почтаси</th>
+                                            <th>Тел. рақами</th>
+                                            <th>Address</th>
+                                            <th style="width:10px">Роли</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th style="width:10px">Исми</th>
+                                            <th>Фамилияси</th>
+                                            <th>Почтаси</th>
+                                            <th>Тел. рақами</th>
+                                            <th>Address</th>
+                                            <th style="width:10px">Роли</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
 
                             </div>
                         </div>
@@ -79,16 +81,16 @@
 </div>
 
 
-        @*<div class="text-center">
-            <a href="/Admin/Address/Upsert/AddressId" class="btn btn-success text-white" style="cursor:pointer">
-                <i class="fas fa-edit"></i>
-            </a>
-            <a class="btn btn-danger text-white" style="cursor:pointer">
-                <i class="fas fa-trash-alt"></i>
-            </a>
-        </div>*@
+@*<div class="text-center">
+        <a href="/Admin/Address/Upsert/AddressId" class="btn btn-success text-white" style="cursor:pointer">
+            <i class="fas fa-edit"></i>
+        </a>
+        <a class="btn btn-danger text-white" style="cursor:pointer">
+            <i class="fas fa-trash-alt"></i>
+        </a>
+    </div>*@
 
-        @section Scripts{
-            <script src="~/js/user.js"></script>
-           
-        }
+@section Scripts{
+    <script src="~/js/user.js"></script>
+
+}

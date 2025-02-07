@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using ITHelpDesk.Utility;
+using Microsoft.AspNetCore.Localization;
 
 namespace HelpDesk.Areas.Requester.Controllers
 {
@@ -26,7 +27,18 @@ namespace HelpDesk.Areas.Requester.Controllers
             _logger = logger;
             _userManager = userManager;
         }
+        [HttpPost]
+        public IActionResult SetLanguage(string culture, string returnUrl)
+        {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new Microsoft.AspNetCore.Http.CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+                );
+            return LocalRedirect(returnUrl);
+        }
 
+      
         public IActionResult Index()
 
         {

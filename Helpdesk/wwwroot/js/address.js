@@ -31,18 +31,37 @@ function loadDataTable() {
                            `;
                 }, "width": "25%"
             }
-        ]
+        ],
+
+        "language": {
+            "lengthMenu": "Кўрсат _MENU_ ёзув ҳар саҳифада",
+            "zeroRecords": "Ҳеч нима топилмади - узур",
+            "info": "Саҳифа _PAGE_ / _PAGES_",
+            "infoEmpty": "Ҳеч қандай дата мавжуд эмас",
+            "infoFiltered": "( Jami _MAX_ та маълумотдан филтер қилинди)",
+
+        },
+        "lengthMenu": [10, 20, 30, 40, 50]
+
     });
 }
 
 function Delete(url) {
     swal({
-        title: "Are you sure you want to Delete?",
-        text: "You will not be able to restore the data!",
+        title: "Ўчиришга ишончингиз комилми?",
+        text: "Ўчиргач ортга қайтара олмайсиз",
         icon: "warning",
-        buttons: true,
+        buttons: {
+            cancel: "Йўқ",
+            catch: {
+                text: "Ҳа",
+                value: "catch",
+            },
+        },
         dangerMode: true
-    }).then((willDelete) => {
+        
+    })
+        .then((willDelete) => {
         if (willDelete) {
             $.ajax({
                 type: "DELETE",
@@ -58,5 +77,7 @@ function Delete(url) {
                 }
             });
         }
-    });
+        })
+
+        
 }

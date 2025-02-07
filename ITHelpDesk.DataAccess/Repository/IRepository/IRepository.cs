@@ -1,12 +1,14 @@
-﻿using System;
+﻿using ITHelpDesk.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ITHelpDesk.DataAccess.Repository.IRepository
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<T> where T : class  
     {
         T Get(int id);
         T GetId(string id);
@@ -26,7 +28,13 @@ namespace ITHelpDesk.DataAccess.Repository.IRepository
         void Remove(int id);
         void Remove(T entity);
         void RemoveRange(IEnumerable<T> entity);
+        
 
 
     }
+
+    //public interface IUserStore<TUser> where TUser : Users
+    //{
+    //    Task SetFNameAsync(TUser User, string fName);
+    //}
 }

@@ -1,30 +1,35 @@
 ﻿@model IEnumerable<ITHelpDesk.Models.Workers>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
 
 <div class="table-responsive">
     <table class="table">
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Score)
+                    @Localizer["score"]
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.NOfWorks)
+                    @Localizer["done"]
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.State)
+                    @Localizer["state"]
                 </th>
 
 
                 <th>
-                    @Html.DisplayNameFor(model => model.Manager)
+                    @Localizer["manager"]
+                </th>
+                <th>
+                    @Localizer["phone"]
                 </th>
 
+                <th>@Localizer["resume"]</th>
                 <th></th>
             </tr>
         </thead>
@@ -38,15 +43,48 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.NOfWorks)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.State)
-                    </td>
+                    @if (item.State == "working")
+                    {
+                <td>
+                    @Localizer["work"]
+                </td>
+                    }
+                    else
+                    {
+                        <td>
+                            Отпуск
+                        </td>
+
+                    }
 
                     <td>
                         @Html.DisplayFor(modelItem => item.Manager.User.Fullname)
                     </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Manager.User.PhoneNumber)
+                    </td>
+                    <td>
+                        <form asp-action="Upload_Config" asp-area="Employee" asp-controller="Workers" method="post" enctype="multipart/form-data">
+                            <label style="color:#527BFF">
+                                <input type="file" style="display:none;" onchange="this.form.submit()" name="file" />
+                                @Localizer["submit"]
+                                <input type="text" class="invisible" name="WorkerId" value="@item.WorkerId" />
 
+                            </label>
+                        </form>
 
+                    </td>
+                    <td>
+                        <form asp-action="Download_Config" asp-area="Employee" asp-controller="Workers" method="get" enctype="multipart/form-data">
+                            <label style="color:#527BFF; display:inline; ">
+                                <input type="submit" style="display:none;" name="file" />
+
+                                <span>@Localizer["download"]</span>
+                                <input type="text" class="invisible" name="WorkerId" value="@item.WorkerId" />
+
+                            </label>
+                        </form>
+                    </td>
                 </tr>
             }
         </tbody>

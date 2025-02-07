@@ -1,0 +1,87 @@
+﻿@model ITHelpDesk.Models.Request
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>@Localizer["title"]</h2>
+<div class="card card-body">
+
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Localizer["rtitle"]
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RName)
+        </dd>
+        <dt class="col-sm-2">
+            @Localizer["description"]
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RDescription)
+        </dd>
+        <dt class="col-sm-2">
+            @Localizer["task"]
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Tasks.type)
+            @Html.DisplayFor(model => model.Tasks.child)
+        </dd>
+
+
+        <dt class="col-sm-2">
+            @Localizer["time"]
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RDateTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Localizer["building"]
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Address.Full)
+        </dd>
+        <dt class="col-sm-2">
+            @Localizer["room"]
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Room)
+        </dd>
+        <dt class="col-sm-2">
+            @Localizer["manager"]
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Manager.User.Fullname)
+        </dd>
+        <dt class="col-sm-2">
+            @Localizer["requester"]
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Requestmaker.User.Fullname)
+        </dd>
+        <dt class="col-sm-2">
+            @Localizer["department"]
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Requestmaker.User.Department)
+        </dd>
+        <dt class="col-sm-2">
+            @Localizer["position"]
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Requestmaker.User.Position)
+        </dd>
+    </dl>
+</div>
+<div>
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="RequestId" />
+        <button type="submit" class="btn btn-danger" style="margin-top:5px">@Localizer["delete"]</button>
+        <a asp-action="Index" class="btn notika-btn-cyan waves-effect text-white" style="margin-top:5px">@Localizer["back"]</a>
+    </form>
+
+
+</div>
+

@@ -10,6 +10,7 @@ using HelpDesk.DataAccess.Data;
 using Microsoft.AspNetCore.Authorization;
 using ITHelpDesk.Utility;
 using Microsoft.AspNetCore.Identity;
+using ITHelpDesk.DataAccess.Repository.IRepository;
 
 namespace ITHelpDesk.Areas.Employee.Controllers
 {
@@ -20,19 +21,22 @@ namespace ITHelpDesk.Areas.Employee.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> UserManager;
-        public RequestsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        private readonly IUnitOfWork _unitOfWork;
+        public RequestsController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IUnitOfWork unitOfWork)
         {
             UserManager = userManager;
             _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         // GET: Employee/Requests
         public async Task<IActionResult> Index()
         {
             Console.WriteLine(UserManager.GetUserId(User));
-            var uNG_HELPDESKContext = _context.Request.Include(r => r.Address).Include(r => r.Manager)
+            var uNG_HELPDESKContext = _context.Request.Include(r=>r.Tasks).Include(r => r.Address).Include(r => r.Manager)
                 .ThenInclude(r => r.User).Include(r => r.Requestmaker).ThenInclude(r => r.User)
-                .Include(r => r.Worker).ThenInclude(r => r.User).Where(r => r.Worker.UserId == UserManager.GetUserId(User));
+                .Include(r => r.Worker).ThenInclude(r => r.User).Where(r => r.Worker.UserId == UserManager.GetUserId(User)).OrderByDescending(r =>r.RequestId);
+            ViewData["score"] = _context.Workers.FirstOrDefault(w => w.UserId == UserManager.GetUserId(User)).Score;
             return View(await uNG_HELPDESKContext.ToListAsync());
         }
         public async Task<IActionResult> Details(int? id)
@@ -111,7 +115,7 @@ namespace ITHelpDesk.Areas.Employee.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RequestId,RName,RDescription,RStatus,RWeight,RDateTime,RequestmakerId,AddressId,ManagerId,WorkerId")] Request request)
+        public async Task<IActionResult> Edit(int id, [Bind("RequestId, Worker_Comment,Room,review,RName,RDescription,RStatus,RWeight,RDateTime,TaskId,RequestmakerId,AddressId,ManagerId,WorkerId")] Request request)
         {
             if (id != request.RequestId)
             {
@@ -182,5 +186,47 @@ namespace ITHelpDesk.Areas.Employee.Controllers
         {
             return _context.Request.Any(e => e.RequestId == id);
         }
+
+        #region API CALLS
+
+        [HttpPost]
+        public IActionResult Accept(int id)
+        {
+            var objFromDb = _unitOfWork.Request.Get(id);
+            if (objFromDb == null)
+            {
+                return Json(new { success = false, message = "Error while accepting" });
+            }
+
+            objFromDb.RStatus = "Taken";
+            _unitOfWork.Save();
+            return Json(new { success = true, message = "Иш сизга юклатилди!" });
+
+        }
+
+        [HttpPost]
+        public IActionResult Deny(int id)
+        {
+            Rejected rejected = new Rejected();
+
+            var objFromDb = _unitOfWork.Request.Get(id);
+
+            rejected.WorkerId = objFromDb.WorkerId;
+            rejected.RequestId = objFromDb.RequestId;
+
+            _unitOfWork.Rejected.Add(rejected);
+
+            if (objFromDb == null)
+            {
+                return Json(new { success = false, message = "Рад етишда хатолик юз берди!" });
+            }
+
+            objFromDb.RStatus = "red";
+            _unitOfWork.Save();
+            return Json(new { success = true, message = "Рад етилди!" });
+
+        }
+
+        #endregion
     }
 }

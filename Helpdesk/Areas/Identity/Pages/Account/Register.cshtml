@@ -14,6 +14,8 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Register | Uzneftegaz Helpdesk</title>
+
+    <link href="~/register/css/chosen/chosen.css" rel="stylesheet" />
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- favicon
@@ -42,6 +44,7 @@
     <!-- mCustomScrollbar CSS
         ============================================ -->
     <link rel="stylesheet" href="~/register/css/scrollbar/jquery.mCustomScrollbar.min.css">
+
     <!-- wave CSS
         ============================================ -->
     <link rel="stylesheet" href="~/register/css/wave/waves.min.css">
@@ -60,6 +63,8 @@
     <!-- modernizr JS
         ============================================ -->
     <script src="~/register/js/vendor/modernizr-2.8.3.min.js"></script>
+
+
 </head>
 <body>
     <!--[if lt IE 8]>
@@ -69,25 +74,40 @@
 
     <div class="login-content" id="logreg-forms">
         <!-- Register -->
-        
+       
+
         <div class="nk-block toggled" id="l-register">
-            <form autocomplete="off" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                @*<h3 class="col-12 text-success text-center py-4">
-                    @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
-                    {
-                        <strong>Register an User Account</strong>
-                    }
-                    else
-                    {
-                        <strong>Sign Up</strong>
-                    }
-                </h3>
-                <hr />*@
+            <div id="msgSuccess" style="display:none">
+                <div class="alert alert-success">
+                    <span class="glyphicon glyphicon-ok"></span><strong>Рўйхатдан ўтиш  муваффақиятли ўтди</strong>
+                </div>
+            </div>
+            <div id="msgError" style="display:none">
+                <div class="alert alert-danger">
+                    <span class="glyphicon glyphicon-remove"></span><strong>Рўйхатдан ўтиш амалга ошмади</strong>
+                </div>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.Message1))
+            {
+                @*<div class="col-sm-8">
+                <div class="alert alert-warning">
+                    @Model.Message1
+                </div>
+            </div>*@
+                
+                    <div class="alert alert-danger">
+                        <span class="glyphicon glyphicon-remove"></span><strong style="color:darkred"> @Model.Message1</strong>
+                    </div>
+                
+            }
+            <form autocomplete="off" asp-route-returnUrl="@Model.ReturnUrl" id="app" onsubmit="checkForm" method="post">
+
+
                 <div class="nk-form">
                     <div class="input-group">
                         <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-support"></i></span>
                         <div class="nk-int-st">
-                            <input asp-for="Input.FName" placeholder="First Name" class="form-control" />
+                            <input id="fname" asp-for="Input.FName" placeholder="Исм" class="form-control" />
                             <span asp-validation-for="Input.FName" class="text-danger"></span>
                         </div>
                     </div>
@@ -95,7 +115,7 @@
                     <div class="input-group">
                         <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-support"></i></span>
                         <div class="nk-int-st">
-                            <input asp-for="Input.LName" placeholder="Last Name" class="form-control" />
+                            <input id="lname" asp-for="Input.LName" placeholder="Фамилия" class="form-control" />
                             <span asp-validation-for="Input.LName" class="text-danger"></span>
                         </div>
                     </div>
@@ -103,7 +123,7 @@
                     <div class="input-group mg-t-15">
                         <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-mail"></i></span>
                         <div class="nk-int-st">
-                            <input asp-for="Input.Email" placeholder="Email" class="form-control" />
+                            <input id="email" asp-for="Input.Email" placeholder="Корпоратив почта" class="form-control" />
                             <span asp-validation-for="Input.Email" class="text-danger"></span>
                         </div>
                     </div>
@@ -114,32 +134,88 @@
                         <span class="input-group-addon nk-ic-st-pro"> +998</span>
 
                         <div class="nk-int-st">
-                            <input asp-for="Input.PhoneNumber" placeholder="PhoneNumber" class="form-control" />
+                            <input id="phonenumber" asp-for="Input.PhoneNumber" placeholder="Тел. рақами" class="form-control" />
                             <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="input-group mg-t-15">
-                        <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-house "></i></span>
-                        <div class="nk-int-st">
-                            <div class="row form-group">
+                        <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-star"></i></span>
+                        <div class="form-group">
+                            <div class="bootstrap-select fm-cmp-mg">
 
-                                <div class="form-row py-2">
-                                    <div class="dropdown-trig-sgn open">
-                                        <div class="col">
-                                            @Html.DropDownListFor(m => m.Input.AddressId, Model.Input.BuildingList ?? new List<SelectListItem>(), 
-                                           "Please select a building", new { @class = "form-control" })
-                                        </div>
-                                    </div>
-                                    <div class="dropdown-trig-sgn open">
-                                        <div class="col">
-                                            @Html.DropDownListFor(m => m.Input.AddressId, Model.Input.BlockList ?? new List<SelectListItem>(), 
-                                           "Please select a block", new { @class = "form-control" })
-                                        </div>
-                                    </div>
-                                </div>
+
+                                <select asp-for="Input.Department" class="form-control selectpicker" id="department" onfocus='this.size=5;' onblur='this.size=1;'
+                                        onchange='this.size=1; this.blur();'>
+                                    <option selected disabled>Департамент ёки болимингизни танланг</option>
+                                    <option>Тижорат департаменти</option>
+                                    <option>Бошъқарув аппарати билан ишлаш департаменти</option>
+                                    <option>Персонални бошқариш департаменти</option>
+                                    <option>Юридик департаменти</option>
+                                    <option>Трансформация ва операцион самарадорлик департаменти</option>
+                                    <option>Молиявий ва комплаенс назорати департаменти</option>
+                                    <option>Матбуот хизмати</option>
+                                    <option>Биринчи бўлим</option>
+                                    <option>Объектларни ҳимоя қилиш ва сафарбарлик ишлари бўлими</option>
+                                    <option>Бизнесни истиқболли ривожлантириш департаменти</option>
+                                    <option>Инвестицион лойиҳаларни амалга ошириш бўйича департаменти</option>
+                                    <option>Марказий ишлаб чиқаришғдиспетчерлик департаменти</option>
+                                    <option>Саноат ва экология хавфизлигиб соғлиқни муҳофаза қилиш ва меҳнат хавфсизлиги департаменти</option>
+                                    <option>Маҳаллийлаштириш ва кооперация алоқаларини кенгайтириш департаменти</option>
+                                    <option>Харидлар департаменти</option>
+                                    <option>Геология департаменти</option>
+                                    <option>Бурғилаш ишларини мувофиқлаштириш департаменти</option>
+                                    <option>Конларни ишлатиш департаменти</option>
+                                    <option>Углеводородларни қазиб чиқариш департаменти</option>
+                                    <option>Газни қайта ишлаш ва газкимё департаменти</option>
+                                    <option>Нефтни қайта ишлаш, нефткимё, нефт маҳсулотларини сақлаш ва транспортировка қилиш департаменти</option>
+                                    <option>Ишлаб чиқаришни техник тартибга солиш департаменти</option>
+                                    <option>Лойиҳалаштириш департаменти</option>
+                                    <option>Капитал курилиш ва таъмирлаш департаменти</option>
+                                    <option>Транспорт ва махсус техника департаменти</option>
+                                    <option>Объектларни бошқариш ва сервис бўлими</option>
+                                    <option>Иқтисод ва режалаштириш департаменти</option>
+                                    <option>Корпоратив муносабатлар ва активларни бошқариш департаменти</option>
+                                    <option>Бухгалтерия ҳисоби ва корпоратив ҳисобот департаменти</option>
+                                    <option>Молия ва ғазначилик операциялари департаменти</option>
+                                    <option>Солиққа тортиш бўлими</option>
+                                    <option>Халқаро молиявий ҳисобот стандартларини жорий этиш бўлими</option>
+                                    <option>Ташкилий ривожлантириш ва персонални рағбатлантириш бўлими</option>
+                                    <option>Ахборот-коммуникация технологиялари департаменти</option>
+                                    <option>Муборак нефть ва газ қазиб чиқариш бошқармаси</option>
+                                    <option>Шўртан нефть ва газ қазиб чиқариш бошқармаси</option>
+                                    <option>Устюрт газ қазиб чиқариш бошқармаси</option>
+                                    <option>Газли нефть ва газ қазиб чиқариш бошқармаси</option>
+                                    <option>Водий нефть ва газ қазиб чиқариш бошқармаси</option>
+                                    <option>Муборак газни қайта ишлаш заводи</option>
+                                    <option>Бошқаси</option>
+                                </select>
+
+                                <span asp-validation-for="Input.Department" class="text-danger"></span>
                             </div>
                         </div>
+                    </div>
+                    <div class="input-group mg-t-15">
+                        <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-draft"></i></span>
+
+                        <div class="form-group">
+                            <input type="text" asp-for="Input.Position" placeholder="Лавозим" class="form-control" id="position" />
+
+                            <span asp-validation-for="Input.Position" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="input-group mg-t-15">
+                        <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-house "></i></span>
+
+                        <div class="form-group">
+
+                            <div class="col" id="building">
+                                @Html.DropDownListFor(m => m.Input.AddressId, Model.Input.BuildingList ?? new List<SelectListItem>(),
+                               "Бинони танланг", new { @class = "form-control" })
+                            </div>
+
+                        </div>
+
                     </div>
 
                     @if (User.IsInRole(SD.Role_Admin))
@@ -150,30 +226,30 @@
                                 <div class="row form-group">
 
                                     <div class="form-row py-2">
-                                        <div class="dropdown-trig-sgn open">
+                                        <div class="dropdown-trig-sgn open" id="role">
                                             <div class="col">
-                                                @Html.DropDownListFor(m => m.Input.Role, Model.Input.RoleList ?? new List<SelectListItem>(), 
-                                               "Please select a role", new { @class = "form-control", id = "ddl" })
+                                                @Html.DropDownListFor(m => m.Input.Role, Model.Input.RoleList ?? new List<SelectListItem>(),
+                                               "Ролни танланг", new { @class = "form-control", id = "ddl" })
                                             </div>
                                         </div>
-                                        <div class="dropdown-trig-sgn open">
+                                        <div class="dropdown-trig-sgn open" id="manager">
                                             <div class="col">
-                                                @Html.DropDownListFor(m => m.Input.ManagerId, Model.Input.ManagerList ?? new List<SelectListItem>(), 
-                                               "Please select a manager", new { @class = "form-control" })
+                                                @Html.DropDownListFor(m => m.Input.ManagerId, Model.Input.ManagerList ?? new List<SelectListItem>(),
+                                               "Гуруҳ раҳбарини танланг", new { @class = "form-control" })
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                     }
 
 
                     <div class="input-group mg-t-15">
                         <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-edit"></i></span>
                         <div class="nk-int-st">
-                            <input asp-for="Input.Password" placeholder="Password" class="form-control" />
+                            <input asp-for="Input.Password" placeholder="Паролни киритинг" class="form-control" />
                             <span asp-validation-for="Input.Password" class="text-danger"></span>
                         </div>
                     </div>
@@ -181,24 +257,26 @@
                     <div class="input-group mg-t-15">
                         <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-edit"></i></span>
                         <div class="nk-int-st">
-                            <input asp-for="Input.ConfirmPassword" placeholder="Confirm Password" class="form-control" />
+                            <input asp-for="Input.ConfirmPassword" placeholder="Паролни қайта киритинг" class="form-control" />
                             <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                         </div>
                     </div>
 
-                    <button type="submit" data-ma-block="#l-login" class="btn btn-login btn-success btn-float" data-toggle="tooltip" 
-                            data-placement="right" title="" data-original-title="Register"><i class="notika-icon notika-right-arrow"></i></button>
+                    <button type="submit" data-ma-block="#l-login" class="btn btn-login btn-success btn-float" data-toggle="tooltip"
+                            data-placement="right" title="" data-original-title="Рўйхатдан ўтиш">
+                        <i class="notika-icon notika-right-arrow"></i>
+                    </button>
                     <br />
-                    <p>
-                        By<em>Registering</em> you agree to our <a href="" target="_blank"> terms of service </a>
-                    </p>
+                    @*<p>
+                    <em>Рўйхатдан ўтиш </em> орқали сиз you agree to our <a href="" target="_blank"> terms of service </a>
+                </p>*@
 
                 </div>
 
                 <div class="nk-navigation rg-ic-stl">
-                    <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" data-ma-block="#l-login"><i class="notika-icon notika-right-arrow"></i> <span>Sign in</span></a>
-                    <a href="" data-ma-action="nk-login-switch" data-ma-block="#l-forget-password"><i>?</i> <span>Forgot Password</span></a>
-                    
+                    <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" data-ma-block="#l-login"><i class="notika-icon notika-left-arrow"></i> <span>Ортга</span></a>
+                    <a href="" data-ma-action="nk-login-switch" data-ma-block="#l-forget-password"><i>?</i> <span>Паролни унутдим</span></a>
+
                 </div>
 
 
@@ -210,7 +288,7 @@
                         <div class="input-group">
                             <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-mail"></i></span>
                             <div class="nk-int-st">
-                                <input type="text" class="form-control" placeholder="Email Address">
+                                <input type="text" class="form-control" placeholder="Email">
                             </div>
                         </div>
 
@@ -222,12 +300,17 @@
                         <a href="" data-ma-action="nk-login-switch" data-ma-block="#l-register"><i class="notika-icon notika-plus-symbol"></i> <span>Register</span></a>
                     </div>
                 </div>
-                </form>
+
+
+            </form>
         </div>
     </div>
-   
+
+
+
     <!-- Login Register area End-->
     <!-- jquery
+
         ============================================ -->
     <script src="~/register/js/vendor/jquery-1.12.4.min.js"></script>
     <!-- bootstrap JS
@@ -293,101 +376,37 @@
     <!-- main JS
         ============================================ -->
     <script src="~/register/js/main.js"></script>
+    <script src="~/register/js/chosen/chosen.jquery.js"></script>
 </body>
-@*<div class="py-4">
-    <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="row form-group">
-        <div class="col-8 offset-2">
-            <div class="card">
-                <div class="card-body px-lg-5 pt-4">
-                    <form autocomplete="off" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                        <h3 class="col-12 text-success text-center py-4">
-                            @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
-                            {
-                                <strong>Register an User Account</strong>
-                            }
-                            else
-                            {
-                                <strong>Sign Up</strong>
-                            }
-                        </h3>
-                        <hr />
 
-                        <div class="py-2">
-
-                            <input asp-for="Input.FName" placeholder="First Name" class="form-control" />
-                            <span asp-validation-for="Input.FName" class="text-danger"></span>
-                        </div>
-                        <div class="py-2">
-                            <input asp-for="Input.LName" placeholder="Last Name" class="form-control" />
-                            <span asp-validation-for="Input.LName" class="text-danger"></span>
-                        </div>
-                        <div class="py-2">
-                            <input asp-for="Input.Email" placeholder="Email" class="form-control" />
-                            <span asp-validation-for="Input.Email" class="text-danger"></span>
-                        </div>
-                        <div class="py-2 input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"> +998</span>
-                            </div>
-                            <input asp-for="Input.PhoneNumber" type="text" placeholder="Phone Number" class="form-control" />
-                            <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-                        </div>
-
-                        <div class="form-row py-2">
-                            <div class="col">
-                                <label asp-for="Input.AddressId">Building</label>
-                                @Html.DropDownListFor(m => m.Input.AddressId, Model.Input.BuildingList ?? new List<SelectListItem>(), "Please select a building", new { @class = "form-control" })
-                            </div>
-                            <div class="col">
-                                <label asp-for="Input.AddressId">Block</label>
-                                @Html.DropDownListFor(m => m.Input.AddressId, Model.Input.BlockList ?? new List<SelectListItem>(), "Please select a block", new { @class = "form-control" })
-                            </div>
-                        </div>
-                        @if (User.IsInRole(SD.Role_Admin))
-                        {
-                            <div class="form-row py-2">
-                                <div class="col">
-                                    <label asp-for="Input.Role"></label>
-                                    @Html.DropDownListFor(m => m.Input.Role, Model.Input.RoleList ?? new List<SelectListItem>(), "Please select a role", new { @class = "form-control", id = "ddl" })
-                                </div>
-
-
-                                <div class="col">
-                                    <label asp-for="Input.ManagerId">Managers</label>
-                                    @Html.DropDownListFor(m => m.Input.ManagerId, Model.Input.ManagerList ?? new List<SelectListItem>(), "Please select a manager", new { @class = "form-control" })
-                                </div>
-
-                            </div>
-
-
-                        }
-                        <div class="form-row py-2">
-                            <div class="col">
-                                <input asp-for="Input.Password" placeholder="Password" class="form-control" />
-                                <span asp-validation-for="Input.Password" class="text-danger"></span>
-                            </div>
-                            <div class="col">
-                                <input asp-for="Input.ConfirmPassword" placeholder="Confirm Password" class="form-control" />
-                                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="py-2">
-                            <button type="submit" class="btn btn-success form-control">Register</button>
-                        </div>
-                        <p>
-                            By clicking <em>Register</em> you agree to our <a href="" target="_blank"> terms of service </a>
-                        </p>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</div>*@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 
 }
 
+
 </html>
+<script>
+    jQuery(document).ready(function ($) {
+        $('#app').change(function () {
+            // hide all optional elements
+
+            $('#manager').hide();
+            $("#role").each(function () {
+                if ($('#role option:selected').text() == "Employee") {
+                    $('#manager').slideDown();
+
+                } else
+                    $('#manager').filter(':hidden');
+
+            });
+        });
+
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#department').chosen();
+    });
+
+</script>

@@ -1,29 +1,32 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
-    <div class="widget-content-left">
+<div class="widget-content-left">
 
-        <div class="btn-group ">
+    <div class="btn-group ">
 
-            @if (SignInManager.IsSignedIn(User))
-            {
-                <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="p-0 btn">
-                    <img width="42" class="rounded-circle" src="~/assets/images/avatars/1.png" alt="">
-                    <i class="fa fa-angle-down ml-2 opacity-8"></i>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="p-0 btn">
+                <img width="42" class="rounded-circle" src="~/assets/images/avatars/1.png" alt="">
+                <i class="fa fa-angle-down ml-2 opacity-8"></i>
+            </a>
+            <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right ">
+                <a role="menuitem" tabindex="0" class="dropdown-item" asp-area="Identity"
+                   asp-page="/Account/Manage/Index" title="Manage">
+                    <i class="notika-icon notika-support"> @Localizer["manage"]</i>
                 </a>
-                <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right ">
-                    <a role="menuitem" tabindex="0" class="dropdown-item" asp-area="Identity"
-                       asp-page="/Account/Manage/Index" title="Manage">
-                        My Account
-                    </a>
-                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                        <button type="submit" tabindex="0" class="dropdown-item">
-                            Logout
-                        </button>
-                     </form>
+                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" tabindex="0" class="dropdown-item">
+                        <i class="notika-icon notika-back"> @Localizer["exit"]</i>
 
-                </div>
-            }
-        </div>
+                    </button>
+                </form>
+
+            </div>
+        }
     </div>
+</div>

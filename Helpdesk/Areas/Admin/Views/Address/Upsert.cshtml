@@ -12,7 +12,7 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         @if (Model.AddressId != 0)
                         {
-                            title = "Edit Address";
+                            title = "Манзилни янгиланг";
                         }
                         <div class="col-12 border-bottom">
                             <h2 class="text-primary">
@@ -22,13 +22,13 @@
                     <div class="col-8 pt-4">
                         <div class="form-group row">
                             <div class="col-4">
-                                <label asp-for="Building"></label>
+                                <label asp-for="Building">Бино</label>
                             </div>
                             <div class="col-4">
-                                <label asp-for="Block"></label>
+                                <label asp-for="Block">Блок</label>
                             </div>
                             <div class="col-4">
-                                <label asp-for="Flag"></label>
+                                <label asp-for="Flag">Флег</label>
                             </div>
                             <div class="col-4">
                                 <input asp-for="Building" class="form-control" />

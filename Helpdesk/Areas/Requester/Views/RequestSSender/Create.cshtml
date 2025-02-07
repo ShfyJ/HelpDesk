@@ -1,137 +1,136 @@
 ﻿@model ITHelpDesk.Models.Request
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
-@{
-    ViewData["Title"] = "Create";
-}
+    @{
+        ViewData["Title"] = "Create";
+    }
 
-<div class="app-page-title">
-    <div class="page-title-wrapper">
-        <div class="page-title-heading">
-            <div class="page-title-icon font-icon-wrapper font-icon-lg">
-                <i class="pe-7s-menu icon-gradient bg-ripe-malin">
-                </i>
-            </div>
-            <div>
-                <h4 class="" style="color: #00BCD4;">New Request</h4>
-                <div class="page-title-subheading">
+    <div class="app-page-title">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="page-title-icon font-icon-wrapper font-icon-lg">
+                    <i class="pe-7s-menu icon-gradient bg-ripe-malin">
+                    </i>
+                </div>
+                <div>
+                    <h4 class="" style="color: #00BCD4;">@Localizer["title"]</h4>
+                    <div class="page-title-subheading">
 
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="page-title-actions">
+            <div class="page-title-actions">
 
-        </div>
-        <div class="page-title-actions">
-
-
-            
+            </div>
+            <div class="page-title-actions">
 
 
+            </div>
         </div>
     </div>
-</div>
 
-<div class="col-lg-5 main-card mb-3 card" style="margin: auto;
-       
-        border: 3px solid #00BCD4;
-        
-    ">
-    <div class="form-element-list mg-t-30">
-        <form asp-action="Create">
-            <div class="cmp-tb-hd">
-                <h2>Send Your Request</h2>
-                <p>Don't rush. It takes just a minute</p>
-            </div>
-            <div class="row">
+    <div class="col-lg-5 main-card mb-3 card" style="margin: auto;">
+        <div class="form-element-list mg-t-30">
+            <form asp-action="Create">
+                <div class="cmp-tb-hd">
+                    <h2>@Localizer["prompt"]</h2>
+                    <p>@Localizer["slow"]!</p>
+                </div>
+                <div class="row">
 
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <div class="col-lg-12 ">
-                    <div class="form-group ic-cmp-int float-lb floating-lb">
-                        <div class="form-ic-cmp">
-                            <i class="notika-icon notika-edit"></i>
-                        </div>
-                        <div class="nk-int-st">
-                            <input type="text" asp-for="RName" class="form-control" placeholder="Give a short name to your problem">
-                            <span asp-validation-for="RName" class="text-danger"></span>
-                        </div>
-                        <div class="form-ic-cmp">
-                            <i class="notika-icon notika-chat"></i>
+                    <div class="col-lg-12 ">
+                        <div class="form-group ic-cmp-int float-lb floating-lb">
+                            <div class="form-ic-cmp">
+                                <i class="notika-icon notika-edit"></i>
+                            </div>
+                            <div class="nk-int-st">
+                                <label style="font-weight:bold">@Localizer["rtitle"]</label>
+                                <input type="text" asp-for="RName" class="form-control" placeholder="@Localizer["example"]" required>
+                                <span asp-validation-for="RName" class="text-danger"></span>
+                            </div>
+                            <div class="form-ic-cmp">
+                                <i class="notika-icon notika-chat"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-lg-12 ">
-                    <div class="form-group ic-cmp-int form-elet-mg">
-                        <div class="form-ic-cmp">
-                            <i class="notika-icon notika-edit"></i>
-                        </div>
-                        <div class="nk-int-st">
-                            <textarea type="text" class="form-control" asp-for="RDescription" placeholder="Write about you problem in detail" rows="5"></textarea>
-                            <span asp-validation-for="RDescription" class="text-danger"></span>
-                        </div>
-                        <div class="form-ic-cmp">
-                            <i class="notika-icon notika-chat"></i>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                <div class="col-lg-12 " style="padding-top:30px;">
-                    <div class="form-group ">
-                        <div class="bootstrap-select fm-cmp-mg">
-
-                            <i class="notika-icon notika-house"></i>
-
-                            <label class="control-label">Select your Location</label>
-                            <select class="selectpicker form-control" asp-for="AddressId" asp-items="ViewBag.AddressId"></select>
-
+                    <div class="col-lg-12 ">
+                        <div class="form-group ic-cmp-int form-elet-mg">
+                            <div class="form-ic-cmp">
+                                <i class="notika-icon notika-edit"></i>
+                            </div>
+                            <div class="nk-int-st">
+                                <label style="font-weight:bold">@Localizer["description"]</label>
+                                <textarea type="text" class="form-control" asp-for="RDescription" placeholder="" rows="5"></textarea>
+                                <span asp-validation-for="RDescription" class="text-danger"></span>
+                            </div>
+                            <div class="form-ic-cmp">
+                                <i class="notika-icon notika-chat"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
 
 
 
-                <div class="col-lg-12 ">
-                    <div class="form-group ic-cmp-int form-elet-mg">
-                        <div class="form-ic-cmp">
-                            <i class="notika-icon notika-avable"></i>
-                        </div>
-                        <div class="nk-int-st">
-                            <input type="text" asp-for="Room" class="form-control" placeholder="Which room are you in?">
-                            <span asp-validation-for="Room" class="text-danger"></span>
-                        </div>
-                        <div class="form-ic-cmp">
-                            <i class="notika-icon notika-success"></i>
+                    <div class="col-lg-12 " style="padding-top:30px;">
+                        <div class="form-group ">
+                            <div class="bootstrap-select fm-cmp-mg">
+
+                                <i class="notika-icon notika-house"></i>
+                                <label class="control-label" style="font-weight:bold">@Localizer["building"]</label>
+                                <select class="selectpicker form-control" asp-for="AddressId" asp-items="ViewBag.AddressId" required></select>
+
+                            </div>
                         </div>
                     </div>
-                </div>
 
-
-                <div style="padding-top: 30px;">
 
 
                     <div class="col-lg-12 ">
-                        <div class="form-group" style="">
-                            <button type="submit" value="Create" class="btn notika-btn-cyan waves-effect text-white">Send</button>
+                        <div class="form-group ic-cmp-int form-elet-mg">
+                            <div class="form-ic-cmp">
+                                <i class="notika-icon notika-avable"></i>
+                            </div>
+                            <div class="nk-int-st">
+                                <label class="control-label" style="font-weight:bold">@Localizer["room"]?</label>
+                                <input type="text" asp-for="Room" class="form-control" placeholder="" required>
+                                <span asp-validation-for="Room" class="text-danger"></span>
+                            </div>
+                            <div class="form-ic-cmp">
+                                <i class="notika-icon notika-success"></i>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div style="padding-top: 30px;">
+
+
+                        <div class="col-lg-12 ">
+                            <div class="form-group" style="">
+                                <button type="submit" value="Create" class="btn notika-btn-cyan waves-effect text-white">@Localizer["send"]</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+
+
+            </form>
+            <div>
+                <a asp-action="Index" class="text-info">@Localizer["back"]</a>
             </div>
-
-
-
-        </form>
-        <div>
-            <a asp-action="Index" class="text-info">Back to List</a>
         </div>
     </div>
-</div>
 
 
 
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+
+

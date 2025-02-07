@@ -1,71 +1,109 @@
 ﻿@model ITHelpDesk.Models.Request
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>@Localizer["title"]</h1>
 
-<div>
-    
-    
+<div class="card card-body">
+
+
     <dl class="row">
-        <dt class = "col-sm-2">
-            Title
+        <dt class="col-sm-2">
+            @Localizer["rtitle"]
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RName)
         </dd>
-        <dt class = "col-sm-2">
-            Description
+        <dt class="col-sm-2">
+            @Localizer["description"]
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RDescription)
         </dd>
-        <dt class = "col-sm-2">
-            Status
+        <dt class="col-sm-2">
+            @Localizer["task"]
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RStatus)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Tasks.type)
+            @Html.DisplayFor(model => model.Tasks.child)
         </dd>
-        <dt class = "col-sm-2">
-           Weight
+
+
+        <dt class="col-sm-2">
+            @Localizer["time"]
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RWeight)
-        </dd>
-        <dt class = "col-sm-2">
-            Date&Time
-        </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RDateTime)
         </dd>
-        <dt class = "col-sm-2">
-           Address
+        <dt class="col-sm-2">
+            @Localizer["building"]
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Address.Full)
         </dd>
-        <dt class = "col-sm-2">
-            Manager
+        <dt class="col-sm-2">
+            @Localizer["room"]
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Room)
+        </dd>
+        <dt class="col-sm-2">
+            @Localizer["manager"]
+        </dt>
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Manager.User.Fullname)
         </dd>
-        <dt class = "col-sm-2">
-            Requester
+        <dt class="col-sm-2">
+            @Localizer["requester"]
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Requestmaker.User.Fullname)
         </dd>
-        <dt class = "col-sm-2">
-            Employee
+        <dt class="col-sm-2">
+            Тел. номер
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Worker.User.Fullname)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Requestmaker.User.PhoneNumber)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Localizer["department"]
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Requestmaker.User.Department)
+        </dd>
+        <dt class="col-sm-2">
+            @Localizer["position"]
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Requestmaker.User.Position)
+        </dd>
+        <dt class="col-sm-2">
+            @if (Model.RStatus.ToLower() == "taken")
+            {
+                <a class="btn btn-success waves-effect text-white" asp-controller="Requests" asp-action="Close" asp-route-id="@Model.RequestId">
+                    <i class="fas fa-check-double"></i> @Localizer["dddone"]
+                </a>
+            }
+            else if (Model.RStatus.ToLower() == "green")
+            {
+                <a class="btn btn-danger waves-effect text-white" asp-controller="Requests" asp-action="UnClose" asp-route-id="@Model.RequestId">
+                    <i class="fas fa-undo-alt"></i> @Localizer["uNdddone"]
+                </a>
+            }
+
+        </dt>
+        <dd class="col-sm-10">
+
         </dd>
     </dl>
+   
 </div>
 <div>
-    <a asp-action="Index">Back to List</a>
+  
+    <a asp-action="Index" class="btn notika-btn-cyan waves-effect text-white" style="margin-top:5px">@Localizer["back"]</a>
 </div>

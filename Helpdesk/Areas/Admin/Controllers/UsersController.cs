@@ -24,7 +24,7 @@ namespace ITHelpDesk.Areas.Admin.Controllers
 
         //public UsersController(IUnitOfWork unitOfWork)
         //{
-           
+
         //    _unitOfWork = unitOfWork;
         //}
         public UsersController(ApplicationDbContext db, IUnitOfWork unitOfWork)
@@ -38,21 +38,19 @@ namespace ITHelpDesk.Areas.Admin.Controllers
             return View();
         }
 
-        
+
 
         #region API CALLS
-        
+
         [HttpGet]
         public IActionResult GetAll()
         {
-            //var allobj = _unitOfWork.Address.GetAll();
-            //return Json(new { data = allobj });
+            
             var userList = _db.User.Include(u => u.Address).ToList();
-           //var userList = _db.User.ToList();
-
+        
             Console.WriteLine("Address is fetched");
             userList.ForEach(item => Console.Write(item + ","));
-            
+
             var userRole = _db.UserRoles.ToList();
             var roles = _db.Roles.ToList();
             foreach (var user in userList)
@@ -64,26 +62,43 @@ namespace ITHelpDesk.Areas.Admin.Controllers
                     user.Address = new Address()
                     {
                         Building = "",
-                        Block ="",
-                        Flag =""
+                        Block = "",
+                        Flag = ""
                     };
-                }        
+                }
             }
-            var jsonlist = Json(new { data = userList }).Value;
-            Console.WriteLine(jsonlist);
+           
             return Json(new { data = userList });
         }
+
+
+        [HttpPost]
+        public IActionResult ResetPassword([FromBody] string id)
+        {
+
+            var objFromDb = _db.Users.FirstOrDefault(u => u.Id == id);
+            if (objFromDb == null)
+            {
+                return Json(new { success = false, message = "Хатолик юз берди!" });
+            }
+            objFromDb.PasswordHash = "AQAAAAEAACcQAAAAEFVadUHyDY8Vx2Ci5wjvZNjInV79peOTbV2niP0Fl0kUBw6AONor2Mm4nSVB24cmOQ==";
+            objFromDb.SecurityStamp = "A2UVJ4HGA4KBZEDA6UIWI4DTJZDOEZHO";
+            objFromDb.ConcurrencyStamp = "60649a66-659b-471b-b80d-cbc9e22470d9";
+            _db.SaveChanges();
+            return Json(new { success = true, message = objFromDb.Email+ " нинг пароли муваффақиятли озгартирилди!" });
+        }
+
 
         [HttpPost]
         public IActionResult LockUnlock([FromBody] string id)
         {
-            Console.WriteLine("we are here");
+           
             var objFromDb = _db.Users.FirstOrDefault(u => u.Id == id);
-            if(objFromDb == null)
+            if (objFromDb == null)
             {
-                return Json(new { success = false, message = "Error while Locking/Unlocking" });
+                return Json(new { success = false, message = "Хатолик юз берди!" });
             }
-            if(objFromDb.LockoutEnd!=null && objFromDb.LockoutEnd > DateTime.Now)
+            if (objFromDb.LockoutEnd != null && objFromDb.LockoutEnd > DateTime.Now)
             {
                 objFromDb.LockoutEnd = DateTime.Now;
             }
@@ -92,14 +107,14 @@ namespace ITHelpDesk.Areas.Admin.Controllers
                 objFromDb.LockoutEnd = DateTime.Now.AddYears(1000);
             }
             _db.SaveChanges();
-            return Json(new { success = true, message = "Operation is Successfull" });
+            return Json(new { success = true, message = "Муваффақиятли бажарилди!" });
         }
 
         //[HttpDelete]
         //public IActionResult Delete(string id)
         //{
         //    var objFromDb = _unitOfWork.User.GetId(id);
-           
+
         //    var userRole = _db.UserRoles.ToList();
         //    var roles = _db.Roles.ToList();
         //    var roleId = userRole.FirstOrDefault(u => u.UserId == objFromDb.Id).RoleId;
@@ -124,7 +139,7 @@ namespace ITHelpDesk.Areas.Admin.Controllers
 
 
         //    _unitOfWork.User.Remove(objFromDb);          
-            
+
         //    _unitOfWork.Save();
         //    return Json(new { success = true, message = "Delete Successful" });
 

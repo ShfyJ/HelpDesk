@@ -15,6 +15,10 @@ namespace ITHelpDesk.DataAccess.Repository.IRepository
         IManagerRepository Manager { get; }
 
         IRequesterRepository Requester { get; }
+
+        IRequestRepository Request { get; }
+
+        IRejectedRepository Rejected { get; }
         void Save();
     }
 }

@@ -1,0 +1,83 @@
+﻿@using ITHelpDesk.Utility
+@using ITHelpDesk.Models
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    var request = new Request();
+
+    string id = null;
+
+    bool free = false;
+
+    string number = null;
+}
+
+<!-- Large modal -->
+
+
+@if (User.IsInRole(SD.Role_HeadManager) || User.IsInRole(SD.Role_Manager) && ViewContext.RouteData.Values["action"].ToString().Equals("Dashboard"))
+{
+
+    @foreach (var worker in Model.Workers)
+    {
+        @foreach (var _request in Model.Requests)
+        {
+            free = false;
+
+            @if (_request.WorkerId == worker.WorkerId && _request.RStatus.Equals("Taken"))
+            { request = _request; break; }
+
+            else { free = true; }
+        }
+
+        id = string.Concat("Id", worker.WorkerId.ToString());
+        <div class="modal fade " tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" id=@id aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="background-color:#00BCD4">
+                    @if (!free)
+                    {
+                        <div class="modal-header" style="background-color:#00BCD4">
+
+
+                            @{ number = string.Concat("A", request.RequestId.ToString());
+                            }
+                            <h5 class="modal-title text-light" id="exampleModalLongTitle" style="background-color:darkcyan">&nbsp;@Localizer["request"] № <span>@number</span>&nbsp;</h5>
+
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" style="color:white">
+                            <p>@Localizer["rtitle"]: @request.RName</p>
+                            <p>@Localizer["description"]: @request.RDescription</p>
+                            <p>@Localizer["sender"]: @request.Requestmaker.User.Fullname</p>
+                            <p>@Localizer["time"]: @request.RDateTime</p>
+                            <p>@Localizer["worker"]: @worker.User.Fullname</p>
+                            <p>@Localizer["manager"]: @worker.Manager.User.Fullname</p>
+                        </div>
+                    }
+
+                    else
+                    {
+                        <div class="modal-body" style="color:white">
+                            <h6>@Localizer["now"] @worker.User.Fullname @Localizer["nothing"]</h6>
+                        </div>
+                    }
+
+
+
+
+
+
+                    <div class="modal-footer" style="background-color:#00BCD4">
+                        <button type="button" class="btn" data-dismiss="modal" style="background-color:white">@Localizer["exit"]</button>
+                        @*<button type="button" class="btn" style="background-color:white">Save changes</button>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+

@@ -1,16 +1,20 @@
 ﻿using HelpDesk.DataAccess.Data;
 using ITHelpDesk.DataAccess.Repository.IRepository;
+using ITHelpDesk.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ITHelpDesk.DataAccess.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
-    {
+    { 
 
         private readonly ApplicationDbContext _db;
         internal DbSet<T> dbSet;
@@ -95,5 +99,18 @@ namespace ITHelpDesk.DataAccess.Repository
         {
             dbSet.RemoveRange(entity);
         }
+
+        //public virtual Task SetFNameAsync(TUser user, string fName)
+        //{
+        //    //ThrowIfDisposed();
+        //    if (user == null)
+        //    {
+        //        throw new ArgumentNullException("user");
+        //    }
+
+        //    user.FName = fName;
+        //    return Task.FromResult(0);
+        //}
+
     }
 }

@@ -17,6 +17,8 @@ namespace ITHelpDesk.Models
         {
             get { return FName + " " + LName; }
         }
+        public string Department { get; set; }
+        public string Position { get; set; }
         //#nullable enable
         
         public int? AddressId { get; set; }

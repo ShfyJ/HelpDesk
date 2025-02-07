@@ -1,0 +1,125 @@
+﻿@model ITHelpDesk.Models.Request
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = "Изоҳ юбориш";
+    var number = string.Concat("A", Model.RequestId.ToString());
+}
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-menu icon-gradient bg-ripe-malin">
+                </i>
+            </div>
+            <div>
+                @Localizer["title"]
+                @*<div class="page-title-subheading">
+                        ---
+                    </div>*@
+            </div>
+        </div>
+        @*<div class="page-title-actions">
+                <button type="button" data-toggle="tooltip" title="Example Tooltip" data-placement="bottom" class="btn-shadow mr-3 btn btn-dark">
+                    <i class="fa fa-star"></i>
+                </button>
+
+            </div>*@
+    </div>
+</div>
+
+
+<div class="main-card mb-3 card">
+    <div class="card-body">
+        <h5 class="card-title">@number @Localizer["number"]</h5>
+        <form asp-action="Edit">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RequestId" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RequestmakerId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ManagerId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="WorkerId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RWeight" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RStatus" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RDateTime" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="review" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="TaskId" />
+
+
+            <div class="position-relative form-group">
+                <label for="RName" class="">@Localizer["rtitle"]</label>
+                <input asp-for="RName" class="form-control" readonly />
+                <span asp-validation-for="RName" class="text-danger"></span>
+            </div>
+            <div class="position-relative form-group">
+                <label for="examplePassword" class="">@Localizer["description"]</label>
+                <textarea asp-for="RDescription" class="form-control" readonly></textarea>
+                <span asp-validation-for="RDescription" class="text-danger"></span>
+            </div>
+
+            <div class="position-relative form-group" style="display:none;">
+                <label for="exampleSelect" class="">@Localizer["address"]</label>
+                <input asp-for="AddressId" class="form-control" asp-items="ViewBag.AddressId" />
+                <span asp-validation-for="AddressId" class="text-danger"></span>
+
+            </div>
+            <div class="position-relative form-group" style="display:none;">
+                <label for="exampleSelect" class="">@Localizer["room"]</label>
+                <input asp-for="Room" class="form-control" readonly />
+                <span asp-validation-for="Room" class="text-danger"></span>
+
+            </div>
+
+
+            <div style="" class="col-lg-10 position-relative form-group">
+
+                <div class="form-group ic-cmp-int form-elet-mg">
+                    <div class="form-ic-cmp">
+                        <i class="notika-icon notika-edit"></i>
+                    </div>
+                    <div class="nk-int-st ">
+                        <label for="examplePassword" class="" style="color:red">@Localizer["comment"]</label>
+                        <textarea type="text" class="form-control" asp-for="Worker_Comment" placeholder="" rows="3"></textarea>
+                        <span asp-validation-for="Worker_Comment" class="text-danger"></span>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="col-lg-10" style="display:none;">
+
+                <div class="form-group ic-cmp-int form-elet-mg">
+                    <div class="form-ic-cmp">
+                        <i class="notika-icon notika-edit"></i>
+                    </div>
+                    <div class="nk-int-st">
+                        <textarea type="text" class="form-control" asp-for="review" placeholder="@Localizer["can"]" rows="3"></textarea>
+                        <span asp-validation-for="review" class="text-danger"></span>
+                    </div>
+
+                </div>
+            </div>
+
+            <button type="submit" class="mt-1 btn notika-btn-cyan text-white">@Localizer["send"]</button>
+        </form>
+    </div>
+</div>
+
+<br />
+<div>
+    <a asp-action="Index">@Localizer["back"]</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

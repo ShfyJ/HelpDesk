@@ -1,148 +1,212 @@
 ﻿@model IEnumerable<ITHelpDesk.Models.Request>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
-@{
-    ViewData["Title"] = "Index";
+    @{
+        ViewData["Title"] = "Index";
 
-    string className = "";
-}
+        string className = "";
+    }
 
-    
-        <div class="app-page-title">
-            <div class="page-title-wrapper">
-                <div class="page-title-heading">
-                    <div class="page-title-icon font-icon-wrapper font-icon-lg">
-                        <i class="pe-7s-menu icon-gradient bg-ripe-malin">
-                        </i>
-                    </div>
-                    <div>
-                        <h2 class="" style="color: #00BCD4;">My Requests</h2>
-                        <div class="page-title-subheading">
 
-                        </div>
-                    </div>
+    <div class="app-page-title">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="page-title-icon font-icon-wrapper font-icon-lg">
+                    <i class="pe-7s-menu icon-gradient bg-ripe-malin">
+                    </i>
                 </div>
-                <div class="page-title-actions">
+                <div>
+                    <h2 class="" style="color: #00BCD4;">@Localizer["title"]</h2>
+                    <div class="page-title-subheading">
 
-                </div>
-                <div class="page-title-actions">
-
-
-                    <a class="btn btn-cyan cyan-icon-notika waves-effect" asp-area="Requester" asp-controller="RequestSSender" asp-action="Create">
-                        <i class="notika-icon notika-plus-symbol"></i> New Request
-                    </a>
-
-
+                    </div>
                 </div>
             </div>
+            <div class="page-title-actions">
+
+            </div>
+            <div class="page-title-actions">
+
+
+                <a class="btn btn-cyan cyan-icon-notika waves-effect" asp-area="Requester" asp-controller="RequestSSender" asp-action="Create">
+                    <i class="notika-icon notika-plus-symbol"></i> @Localizer["send"]
+                </a>
+
+
+            </div>
         </div>
+    </div>
 
-        <br />
-
-
-        <div class="data-table-area">
-          
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="data-table-list">
-                            @*<div class="basic-tb-hd">
-                                <h2>Basic Example</h2>
-                                <p>It's just that simple. Turn your simple table into a sophisticated data table and offer your users a nice experience and great features without any effort.</p>
-                            </div>*@
-                            <div class="table-responsive">
-                                <div id="data-table-basic_wrapper" class="dataTables_wrapper">
-                                    <div class="dataTables_length" id="data-table-basic_length"><label>Show <select name="data-table-basic_length" aria-controls="data-table-basic" class=""><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> entries</label></div><div id="data-table-basic_filter" class="dataTables_filter"><label>Search:<input type="search" class="" placeholder="" aria-controls="data-table-basic"></label></div><table id="data-table-basic" class="table table-striped dataTable" role="grid" aria-describedby="data-table-basic_info">
-                                        <thead>
-                                            <tr class="table-info">
-                                                <th>
-                                                    Request Name
-                                                </th>
-                                                <th>
-                                                    Descripion
-                                                </th>
-
-                                                <th>
-                                                    Status
-                                                </th>
-
-                                                <th>
-                                                    DateTime
-                                                </th>
-                                                <th>
-                                                    Address
-                                                </th>
-                                                <th>
-                                                    Room
-                                                </th>
-                                                <th>
-                                                    Manager
-                                                </th>
+    <br />
 
 
-                                                <th>
-                                                    Worker
-                                                </th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var item in Model)
+    <div class="data-table-area">
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="data-table-list">
+                    @*<div class="basic-tb-hd">
+                            <h2>Basic Example</h2>
+                            <p>It's just that simple. Turn your simple table into a sophisticated data table and offer your users a nice experience and great features without any effort.</p>
+                        </div>*@
+                    <div class="table-responsive">
+                        <table class="align-middle mb-0 table table-borderless table-striped table-hover" id="table" style="border-collapse: separate; border-spacing: 0 3px;">
+                            <thead>
+                                <tr class="">
+                                    <th style="vertical-align:middle">
+                                        @Localizer["Rtitle"]
+                                    </th>
+                                    <th style="vertical-align:middle">
+                                        @Localizer["comment"]
+                                    </th>
+
+                                    <th style="vertical-align:middle">
+                                        @Localizer["work"]
+                                    </th>
+
+                                    <th style="vertical-align:middle">
+                                        @Localizer["time"]
+                                    </th>
+                                    <th style="vertical-align:middle">
+                                        @Localizer["building"]
+                                    </th>
+                                    <th style="vertical-align:middle">
+                                        @Localizer["room"]
+                                    </th>
+                                    <th style="vertical-align:middle">
+                                        @Localizer["get"]
+                                    </th>
+
+
+                                    <th style="vertical-align:middle">
+                                        @Localizer["worker"]
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    if (item.RStatus == "Taken")
+                                    {
+                                        className = "bg-light";
+
+                                    }
+
+                                    else if (item.RStatus == "blue")
+                                    {
+                                        className = "bg-info";
+
+                                    }
+                                    else if (item.RStatus == "yellow")
+                                    {
+                                        className = "bg-warning";
+
+                                    }
+                                    else if (item.RStatus == "red")
+                                    {
+                                        className = "bg-danger";
+                                    }
+                                    else if (item.RStatus == "green")
+                                    {
+                                        className = "bg-success";
+                                    }
+                                    <tr class=@className>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RName)
+                                        </td>
+                                        <td style="display: inline-block;width: 180px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;">
+                                            @Html.DisplayFor(modelItem => item.RDescription)
+                                        </td>
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Tasks.child)
+                                        </td>
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RDateTime)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Address.Full)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Room)
+                                        </td>
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Manager.User.Fullname)
+                                            @Html.DisplayFor(modelItem => item.Manager.User.PhoneNumber)
+                                        </td>
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Worker.User.Fullname)
+                                            @Html.DisplayFor(modelItem => item.Worker.User.PhoneNumber)
+                                            @if (item.RStatus == "yellow")
                                             {
-                                                <tr>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.RName)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.RDescription)
-                                                    </td>
-
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.RStatus)
-                                                    </td>
-
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.RDateTime)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.Address.Full)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.Room)
-                                                    </td>
-
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.Manager.User.Fullname)
-                                                        @Html.DisplayFor(modelItem => item.Manager.User.PhoneNumber)
-                                                    </td>
-
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.Worker.User.Fullname)
-                                                        @Html.DisplayFor(modelItem => item.Worker.User.PhoneNumber)
-                                                    </td>
-                                                    <td>
-
-                                                        <div class="text-center" style="width:100px">
-                                                            <a asp-action="Edit" asp-route-id="@item.RequestId" class="btn btn-teal teal-icon-notika waves-effect" style="cursor:pointer">
-                                                                <i class="fas fa-edit"></i>
-                                                            </a>
-                                                            <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-cyan cyan-icon-notika waves-effect" style="cursor:pointer">
-                                                                <i class="fas fa-info-circle"></i>
-                                                            </a>
-                                                            @*<a asp-action="Delete" asp-route-id="@item.RequestId" class="btn btn-danger text-white" style="cursor:pointer">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>*@
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                <br />
+                                                <a>Очередь: </a> @Html.DisplayFor(modelItem => item.YourOrder)
                                             }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                                        </td>
+                                        <td>
+
+                                            <div class="text-center" style="width:100px">
+                                                <a asp-action="Edit" asp-route-id="@item.RequestId" class="btn btn-teal teal-icon-notika waves-effect" style="cursor:pointer">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                @*  <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-cyan cyan-icon-notika waves-effect" style="cursor:pointer">
+                                                                                    <i class="fas fa-info-circle"></i>
+                                                                                </a>
+                                                                                <a asp-action="Delete" asp-route-id="@item.RequestId" class="btn btn-danger text-white" style="cursor:pointer">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </a>*@
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                            <tfoot>
+                                <tr class="">
+                                    <th>
+                                        @Localizer["Rtitle"]
+                                    </th>
+                                    <th>
+                                        @Localizer["comment"]
+                                    </th>
+
+                                    <th>
+                                        @Localizer["work"]
+                                    </th>
+
+                                    <th>
+                                        @Localizer["time"]
+                                    </th>
+                                    <th>
+                                        @Localizer["building"]
+                                    </th>
+                                    <th>
+                                        @Localizer["room"]
+                                    </th>
+                                    <th>
+                                        @Localizer["get"]
+                                    </th>
+
+
+                                    <th>
+                                        @Localizer["worker"]
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-            
+
+
 
 

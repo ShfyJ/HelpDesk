@@ -1,115 +1,124 @@
 ﻿@model ITHelpDesk.Models.Request
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
 
-<h4>Request</h4>
-<form asp-action="Edit">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Title
-                </th>
-                <th>
-                    Description
-                </th>
-                <th>
-                    Room
-                </th>
-                <th>
-                    Date time
-                </th>
-                <th>
-                    Address
-                </th>
-                <th>
-                    Worker
-                </th>
-                <th>
-                    Weight
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
+@{ var number = string.Concat("A", Model.RequestId.ToString()); }
+
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-menu icon-gradient bg-ripe-malin">
+                </i>
+            </div>
+            <div>
+                @Localizer["title"]
+                @*<div class="page-title-subheading">
+                        ---
+                    </div>*@
+            </div>
+        </div>
+        @*<div class="page-title-actions">
+                <button type="button" data-toggle="tooltip" title="Example Tooltip" data-placement="bottom" class="btn-shadow mr-3 btn btn-dark">
+                    <i class="fa fa-star"></i>
+                </button>
+
+            </div>*@
+    </div>
+</div>
+
+
+<div class="main-card mb-3 card">
+    <div class="card-body">
+        <h5 class="card-title">@number  @Localizer["number"]</h5>
+        <form asp-action="Edit">
+
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="RequestId" />
             <input type="hidden" asp-for="RequestmakerId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RWeight" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RStatus" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RDateTime" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Room" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="TaskId" />
 
 
-            <tr>
+            <div class="position-relative form-group">
+                <label for="exampleEmail" class=""> @Localizer["rtitle"]</label>
+                <input asp-for="RName" placeholder=@Html.DisplayFor(modelItem => modelItem.RName) class="form-control" readonly>
+            </div>
+            <div class="position-relative form-group">
+                <label for="examplePassword" class=""> @Localizer["description"]</label>
+                <textarea asp-for="RDescription" placeholder=@Html.DisplayFor(modelItem => modelItem.RDescription) class="form-control" readonly></textarea>
+            </div>
+            <div class="position-relative form-group">
+                <label for="exampleSelect" class=""> @Localizer["address"]</label>
+                <select asp-for="AddressId" class="form-control" asp-items="ViewBag.AddressId"></select>
+                <span asp-validation-for="AddressId" class="text-danger"></span>
 
-                <td>
-                    <div class="form-group">
-                        <input type="hidden" asp-for="RName" class="form-control" />
-                        <span asp-validation-for="RName" class="text-danger"></span>
-                        @Html.DisplayFor(modelItem => modelItem.RDescription)
+            </div>
+            @*<div class="form-group">
+                    <select asp-for="WorkerId" class="form-control" asp-items="ViewBag.WorkerId"></select>
+                    <span asp-validation-for="WorkerId" class="text-danger"></span>
+                </div>*@
 
+            <div class="form-group">
+                <label for="exampleSelect" class=""> @Localizer["worker"]</label>
+                <div class="chosen-select-act">
+
+                    <select asp-for="WorkerId" class="chosen-select-width" tabindex="5" asp-items="ViewBag.WorkerId"></select>
+                    <span asp-validation-for="WorkerId" class="text-danger"></span>
+                </div>
+            </div>
+            <div style="display:none;" class="col-lg-10">
+
+                <div class="form-group ic-cmp-int form-elet-mg">
+                    <div class="form-ic-cmp">
+                        <i class="notika-icon notika-edit"></i>
+                    </div>
+                    <div class="nk-int-st">
+                        <textarea type="text" class="form-control" asp-for="Worker_Comment" placeholder="Izoh qoldiring" rows="3"></textarea>
+                        <span asp-validation-for="Worker_Comment" class="text-danger"></span>
                     </div>
 
-                </td>
-                <td>
-                    <input type="hidden" asp-for="RDescription" class="form-control" />
-                    <span asp-validation-for="RDescription" class="text-danger"></span>
-                    @Html.DisplayFor(modelItem => modelItem.RDescription)
-                </td>
-                <td>
-                    <input type="hidden" asp-for="Room" class="form-control" />
-                    <span asp-validation-for="Room" class="text-danger"></span>
-                    @Html.DisplayFor(modelItem => modelItem.Room)
-                </td>
 
+                </div>
+            </div>
+            <div class="col-lg-10" style="display:none;">
 
-                <td>
-                    <input type="hidden" asp-for="RDateTime" class="form-control" />
-                    <span asp-validation-for="RDateTime" class="text-danger"></span>
-                    @Html.DisplayFor(modelItem => modelItem.RDateTime)
-                </td>
-                <td>
-                    <div class="form-group">
-                        <select asp-for="AddressId" class="form-control" asp-items="ViewBag.AddressId"></select>
-                        <span asp-validation-for="AddressId" class="text-danger"></span>
+                <div class="form-group ic-cmp-int form-elet-mg">
+                    <div class="form-ic-cmp">
+                        <i class="notika-icon notika-edit"></i>
                     </div>
-                    <!-- @Html.DisplayFor(modelItem => modelItem.Address.Full) -->
-                </td>
-
-                <td>
-                    <div class="form-group">
-                        <select asp-for="WorkerId" class="form-control" asp-items="ViewBag.WorkerId"></select>
-                        <span asp-validation-for="WorkerId" class="text-danger"></span>
+                    <div class="nk-int-st">
+                        <textarea type="text" class="form-control" asp-for="review" placeholder="Izoh qoldiring" rows="3"></textarea>
+                        <span asp-validation-for="review" class="text-danger"></span>
                     </div>
 
-                </td>
-                <td>
-                    <div class="form-group">
-                        <select asp-for="RWeight" class="form-control">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                        </select>
+                </div>
+            </div>
 
-                        <span asp-validation-for="RWeight" class="text-danger"></span>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-primary" />
-                    </div>
-                </td>
+
+            <button type="submit" class="mt-1 btn btn-primary"> @Localizer["give"]</button>
+        </form>
+    </div>
+</div>
 
 
 
-            </tr>
-        </tbody>
-    </table>
-</form>
+
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index"> @Localizer["back"]</a>
 </div>
 
 @section Scripts {
